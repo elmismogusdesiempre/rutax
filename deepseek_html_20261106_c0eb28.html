@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A1F44">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Ruta X · Mensajero</title>
+<style>
+  :root {
+    --navy-deep: #0A1F44;
+    --navy: #0E3A6C;
+    --navy-light: #1E5BB8;
+    --accent: #FF6B35;
+    --accent-soft: #FFF1EB;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --bg: #f4f6fa;
+    --green: #22c55e;
+    --green-dark: #16a34a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    padding-bottom: 80px;
+  }
+
+  /* ---------- Header con marca ---------- */
+  .app-header {
+    background: linear-gradient(135deg, #0A1F44 0%, #0E3A6C 55%, #1E5BB8 100%);
+    color: white;
+    padding: 16px 18px 14px;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .logo-mark {
+    display: block;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+  .logo-mark svg { width: 100%; height: 100%; display: block; }
+
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    line-height: 1;
+    letter-spacing: -0.3px;
+  }
+  .wm-ruta { color: #fff; font-weight: 600; font-size: 19px; }
+  .wm-x    { color: var(--accent); font-weight: 800; font-size: 22px; }
+
+  .reset-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .reset-btn:active { background: rgba(255,255,255,0.2); }
+
+  .messenger-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,107,53,0.16);
+    border: 1.5px solid var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+
+  .messenger-info { flex: 1; min-width: 0; }
+  .messenger-name { font-weight: 700; font-size: 15px; }
+  .messenger-code { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+  /* ---------- Sticky: progreso + tabs ---------- */
+  .sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background: white;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+  }
+
+  .progress-wrap { padding: 12px 0 8px; }
+  .progress-bar { height: 6px; background: #eef2f7; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--green-dark));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    padding: 6px 20px 0;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .tabs {
+    display: flex;
+    padding: 0 8px;
+    border-top: 1px solid #f3f4f6;
+  }
+  .tab {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab.active { color: var(--navy); border-bottom-color: var(--accent); }
+
+  /* ---------- Vistas ---------- */
+  .view { display: none; padding: 16px; }
+  .view.active { display: block; }
+
+  /* ---------- Tarjetas de ruta ---------- */
+  .route-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .package-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    cursor: pointer;
+    transition: transform 0.1s;
+    border-left: 4px solid #d1d5db;
+  }
+  .package-card:active { transform: scale(0.98); }
+  .package-card.delivered { border-left-color: var(--green); background: #f0fdf4; cursor: default; }
+  .package-card.issue { border-left-color: #f59e0b; background: #fffbeb; }
+
+  .order-badge {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .package-card.delivered .order-badge { background: #dcfce7; color: var(--green-dark); }
+  .package-card.issue .order-badge { background: #fef3c7; color: #b45309; }
+
+  .package-info { flex: 1; min-width: 0; }
+  .package-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px; }
+  .guide { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.3px; }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .status-badge.pending { background: #f3f4f6; color: var(--muted); }
+  .status-badge.delivered { background: #dcfce7; color: var(--green-dark); }
+  .status-badge.issue { background: #fef3c7; color: #b45309; }
+
+  .client { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .address { font-size: 13px; color: var(--muted); line-height: 1.3; }
+  .issue-count { font-size: 11px; color: #b45309; font-weight: 600; margin-top: 4px; }
+  .chevron { font-size: 24px; color: #d1d5db; }
+
+  /* ---------- Empty states ---------- */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .empty-icon {
+    font-size: 44px;
+    margin-bottom: 14px;
+    opacity: 0.55;
+    filter: grayscale(0.3);
+  }
+  .empty-title {
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  /* ---------- Overlay detalle ---------- */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    display: none;
+    overflow-y: auto;
+  }
+  .overlay.active { display: block; }
+
+  .detail-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .detail-header {
+    background: linear-gradient(135deg, #0A1F44 0%, #0E3A6C 55%, #1E5BB8 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .detail-title { font-weight: 700; font-size: 16px; }
+  .detail-sub { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+  .detail-body { flex: 1; padding: 16px; }
+
+  .info-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+    border-bottom: 1px solid #f3f4f6;
+    gap: 12px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .label { color: var(--muted); font-weight: 500; flex-shrink: 0; }
+  .info-row span:last-child { text-align: right; font-weight: 600; color: var(--ink); }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    margin-top: 4px;
+  }
+
+  .photo-area {
+    background: white;
+    border: 2px dashed #d1d5db;
+    border-radius: 14px;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+  }
+  .photo-area:active { border-color: var(--accent); }
+  .photo-placeholder { text-align: center; color: #9ca3af; padding: 20px; }
+  .camera-icon { font-size: 42px; margin-bottom: 8px; }
+  .photo-placeholder .hint { font-size: 11px; margin-top: 4px; color: #d1d5db; }
+  .photo-preview { width: 100%; height: 100%; object-fit: cover; }
+  .hidden { display: none !important; }
+
+  .retake-btn {
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+
+  .gps-box {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+    border-left: 4px solid #d1d5db;
+  }
+  .gps-box.ok { border-left-color: var(--green); }
+  .gps-box.error { border-left-color: #ef4444; }
+  .gps-icon { font-size: 24px; }
+  .gps-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .gps-text strong { color: var(--ink); font-size: 14px; }
+
+  .note-input {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: none;
+    min-height: 80px;
+    outline: none;
+    background: white;
+  }
+  .note-input:focus { border-color: var(--navy); }
+
+  .detail-actions {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 10px;
+    background: white;
+    border-top: 1px solid var(--line);
+    position: sticky;
+    bottom: 0;
+  }
+  .action-btn {
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .action-btn:active { transform: scale(0.97); }
+  .action-btn.novedad { background: #fef3c7; color: #b45309; }
+  .action-btn.entregado {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.25);
+  }
+
+  /* ---------- Registro ---------- */
+  .events-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .events-header h3 { font-size: 17px; color: var(--ink); }
+  .events-count { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+  .event-card {
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+  }
+  .event-photo {
+    width: 70px; height: 70px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .event-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .no-photo { font-size: 10px; color: #9ca3af; text-align: center; padding: 4px; }
+
+  .event-info { flex: 1; min-width: 0; }
+  .event-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .event-guide { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .event-address { font-size: 13px; color: #374151; margin-bottom: 2px; }
+  .event-note { font-size: 12px; color: var(--muted); font-style: italic; margin: 4px 0; }
+  .event-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #9ca3af; margin-top: 4px; }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--navy-deep);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 200;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(10,31,68,0.3);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="app-header">
+    <div class="brand-row">
+      <div class="brand">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="rxLogoGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1E5BB8"/>
+                <stop offset="1" stop-color="#0A1F44"/>
+              </linearGradient>
+            </defs>
+            <rect width="40" height="40" rx="12" fill="url(#rxLogoGrad)"/>
+            <path d="M13 13 L27 27 M27 13 L13 27" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="1.9" fill="#FF6B35"/>
+            <circle cx="27" cy="13" r="1.9" fill="#FF6B35"/>
+            <circle cx="13" cy="27" r="1.9" fill="#FF6B35"/>
+            <circle cx="27" cy="27" r="1.9" fill="#FF6B35"/>
+          </svg>
+        </span>
+        <span class="wordmark">
+          <span class="wm-ruta">Ruta</span><span class="wm-x">X</span>
+        </span>
+      </div>
+      <button class="reset-btn" id="resetBtn" title="Reiniciar demo" aria-label="Reiniciar demo">↻</button>
+    </div>
+
+    <div class="messenger-bar">
+      <div class="avatar" id="avatar">JPK</div>
+      <div class="messenger-info">
+        <div class="messenger-name" id="messengerName">Julián Parra Klein</div>
+        <div class="messenger-code" id="messengerCode">Código: JPK · Cali</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="sticky-top">
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">0 de 10 entregados</div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="ruta">📦 Ruta</button>
+      <button class="tab" data-tab="registro">📋 Registro</button>
+    </nav>
+  </div>
+
+  <main id="viewRuta" class="view active">
+    <div id="routeList" class="route-list"></div>
+  </main>
+  <main id="viewRegistro" class="view">
+    <div id="eventsTable"></div>
+  </main>
+</div>
+
+<div id="detailOverlay" class="overlay">
+  <div class="detail-screen">
+    <div class="detail-header">
+      <button class="back-btn" id="backBtn">←</button>
+      <div>
+        <div class="detail-title">Registrar evidencia</div>
+        <div class="detail-sub" id="detailGuide">Guía —</div>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="info-card">
+        <div class="info-row"><span class="label">Cliente</span><span id="detailClient">—</span></div>
+        <div class="info-row"><span class="label">Dirección</span><span id="detailAddress">—</span></div>
+        <div class="info-row"><span class="label">Teléfono</span><span id="detailPhone">—</span></div>
+      </div>
+
+      <div class="section-label">Fotografía de evidencia</div>
+      <div class="photo-area" id="photoArea">
+        <div class="photo-placeholder" id="photoPlaceholder">
+          <div class="camera-icon">📷</div>
+          <div>Toca para tomar foto</div>
+          <div class="hint">Paquete entregado + fachada</div>
+        </div>
+        <img id="photoPreview" class="photo-preview hidden" alt="evidencia" />
+        <input type="file" accept="image/*" capture="environment" id="photoInput" class="hidden" />
+      </div>
+      <button class="retake-btn hidden" id="retakeBtn">🔄 Tomar otra foto</button>
+
+      <div class="section-label">Ubicación GPS</div>
+      <div class="gps-box" id="gpsBox">
+        <div class="gps-icon">📍</div>
+        <div class="gps-text" id="gpsText">Buscando ubicación...</div>
+      </div>
+
+      <div class="section-label">Nota (opcional)</div>
+      <textarea id="noteInput" class="note-input" placeholder="Ej: entregado a la señora, recibido por el vecino..."></textarea>
+    </div>
+
+    <div class="detail-actions">
+      <button class="action-btn novedad" id="btnNovedad">⚠️ Novedad</button>
+      <button class="action-btn entregado" id="btnEntregado">✓ Entregado</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const KEYS = { messenger: 'ruta_messenger_v1', route: 'ruta_route_v1', events: 'ruta_events_v1' };
+  const DEFAULT_MESSENGER = { code: 'JPK', name: 'Julián Parra Klein' };
+
+  const DEFAULT_ROUTE = [
+    { id: 'pkg-1',  order: 1,  guide: 'CLL-2481', client: 'María Fernández', address: 'Calle 5 # 34-120, San Fernando',     phone: '310 555 0101', status: 'pending' },
+    { id: 'pkg-2',  order: 2,  guide: 'CLL-2482', client: 'Andrés Salcedo',  address: 'Carrera 100 # 11-45, Ciudad Jardín', phone: '315 555 0102', status: 'pending' },
+    { id: 'pkg-3',  order: 3,  guide: 'CLL-2483', client: 'Luisa Ramírez',   address: 'Avenida 6N # 23-10, Granada',       phone: '320 555 0103', status: 'pending' },
+    { id: 'pkg-4',  order: 4,  guide: 'CLL-2484', client: 'Jorge Valencia',  address: 'Calle 52 # 2B-30, Tequendama',      phone: '311 555 0104', status: 'pending' },
+    { id: 'pkg-5',  order: 5,  guide: 'CLL-2485', client: 'Diana Mosquera',  address: 'Carrera 15 # 45-67, Versalles',     phone: '312 555 0105', status: 'pending' },
+    { id: 'pkg-6',  order: 6,  guide: 'CLL-2486', client: 'Camilo Ortiz',    address: 'Calle 9 # 47-22, Santa Isabel',     phone: '318 555 0106', status: 'pending' },
+    { id: 'pkg-7',  order: 7,  guide: 'CLL-2487', client: 'Paola Cárdenas',  address: 'Carrera 66 # 13-50, El Lido',       phone: '313 555 0107', status: 'pending' },
+    { id: 'pkg-8',  order: 8,  guide: 'CLL-2488', client: 'Ricardo Peña',    address: 'Calle 23 # 4-15, Bretaña',          phone: '314 555 0108', status: 'pending' },
+    { id: 'pkg-9',  order: 9,  guide: 'CLL-2489', client: 'Sandra Lucumí',   address: 'Avenida 3N # 47-80, Centenario',    phone: '316 555 0109', status: 'pending' },
+    { id: 'pkg-10', order: 10, guide: 'CLL-2490', client: 'Felipe Muñoz',    address: 'Carrera 43A # 6-25, La Merced',     phone: '317 555 0110', status: 'pending' }
+  ];
+
+  const state = { messenger: null, route: [], events: [] };
+  let currentPackage = null;
+  let currentPhoto = null;
+  let currentGPS = null;
+  let gpsWatchId = null;
+  let toastTimer = null;
+
+  function loadState() {
+    try {
+      state.messenger = JSON.parse(localStorage.getItem(KEYS.messenger)) || DEFAULT_MESSENGER;
+      const route = JSON.parse(localStorage.getItem(KEYS.route));
+      state.route = Array.isArray(route) && route.length ? route : JSON.parse(JSON.stringify(DEFAULT_ROUTE));
+      const events = JSON.parse(localStorage.getItem(KEYS.events));
+      state.events = Array.isArray(events) ? events : [];
+    } catch (e) {
+      state.messenger = DEFAULT_MESSENGER;
+      state.route = JSON.parse(JSON.stringify(DEFAULT_ROUTE));
+      state.events = [];
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(KEYS.messenger, JSON.stringify(state.messenger));
+      localStorage.setItem(KEYS.route, JSON.stringify(state.route));
+      localStorage.setItem(KEYS.events, JSON.stringify(state.events));
+    } catch (e) {
+      showToast('⚠ Almacenamiento lleno. Reinicia la demo.');
+    }
+  }
+
+  function showToast(msg, duration = 2400) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), duration);
+  }
+
+  function formatTime(ts) {
+    const d = new Date(ts);
+    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const day = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${months[d.getMonth()]} · ${hh}:${mm}`;
+  }
+
+  function compressImage(file, maxWidth = 700, quality = 0.55) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  function renderHeader() {
+    document.getElementById('messengerName').textContent = state.messenger.name;
+    document.getElementById('avatar').textContent = state.messenger.code;
+    document.getElementById('messengerCode').textContent = `Código: ${state.messenger.code} · Cali`;
+  }
+
+  function renderRoute() {
+    const list = document.getElementById('routeList');
+    if (!state.route.length) {
+      list.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">📦</div>
+          <div class="empty-title">No hay paquetes en la ruta</div>
+          <div>Cuando la oficina te asigne entregas, aparecerán aquí.</div>
+        </div>`;
+    } else {
+      list.innerHTML = state.route.map(p => {
+        const issues = state.events.filter(e => e.packageId === p.id && e.status === 'issue').length;
+        const icon = p.status === 'delivered' ? '✓' : p.status === 'issue' ? '⚠' : '○';
+        const label = p.status === 'delivered' ? 'Entregado' : p.status === 'issue' ? 'Novedad' : 'Pendiente';
+        return `
+          <div class="package-card ${p.status}" data-id="${p.id}">
+            <div class="order-badge">${p.order}</div>
+            <div class="package-info">
+              <div class="package-top">
+                <span class="guide">${p.guide}</span>
+                <span class="status-badge ${p.status}">${icon} ${label}</span>
+              </div>
+              <div class="client">${p.client}</div>
+              <div class="address">${p.address}</div>
+              ${issues > 0 ? `<div class="issue-count">⚠ ${issues} novedad${issues > 1 ? 'es' : ''} previa${issues > 1 ? 's' : ''}</div>` : ''}
+            </div>
+            <div class="chevron">›</div>
+          </div>`;
+      }).join('');
+
+      list.querySelectorAll('.package-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const pkg = state.route.find(p => p.id === card.dataset.id);
+          if (pkg && pkg.status !== 'delivered') openDetail(pkg);
+        });
+      });
+    }
+
+    const total = state.route.length || 1;
+    const done = state.route.filter(p => p.status === 'delivered').length;
+    document.getElementById('progressText').textContent = `${done} de ${state.route.length} entregados`;
+    document.getElementById('progressFill').style.width = `${(done / total) * 100}%`;
+  }
+
+  function renderEvents() {
+    const box = document.getElementById('eventsTable');
+    if (!state.events.length) {
+      box.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">Aún no hay registros</div>
+          <div>Comienza a entregar paquetes para ver aquí tu historial.</div>
+        </div>`;
+      return;
+    }
+    const sorted = [...state.events].sort((a, b) => b.timestamp - a.timestamp);
+    box.innerHTML = `
+      <div class="events-header">
+        <h3>Registro de entregas</h3>
+        <span class="events-count">${state.events.length} evento${state.events.length > 1 ? 's' : ''}</span>
+      </div>
+      ${sorted.map(e => `
+        <div class="event-card">
+          <div class="event-photo">
+            ${e.photo ? `<img src="${e.photo}" alt="foto" />` : '<div class="no-photo">Sin foto</div>'}
+          </div>
+          <div class="event-info">
+            <div class="event-top">
+              <span class="event-guide">${e.guide}</span>
+              <span class="status-badge ${e.status}">${e.status === 'delivered' ? '✓ Entregado' : '⚠ Novedad'}</span>
+            </div>
+            <div class="event-address">${e.address}</div>
+            ${e.note ? `<div class="event-note">"${e.note}"</div>` : ''}
+            <div class="event-meta">
+              <span>🕒 ${formatTime(e.timestamp)}</span>
+              ${e.gps ? `<span>📍 ${e.gps.lat.toFixed(5)}, ${e.gps.lng.toFixed(5)}</span>` : ''}
+            </div>
+          </div>
+        </div>`).join('')}
+    `;
+  }
+
+  function openDetail(pkg) {
+    currentPackage = pkg;
+    currentPhoto = null;
+    currentGPS = null;
+
+    document.getElementById('detailGuide').textContent = `Guía ${pkg.guide}`;
+    document.getElementById('detailClient').textContent = pkg.client;
+    document.getElementById('detailAddress').textContent = pkg.address;
+    document.getElementById('detailPhone').textContent = pkg.phone;
+
+    document.getElementById('photoPreview').classList.add('hidden');
+    document.getElementById('photoPreview').src = '';
+    document.getElementById('photoPlaceholder').classList.remove('hidden');
+    document.getElementById('retakeBtn').classList.add('hidden');
+    document.getElementById('noteInput').value = '';
+    document.getElementById('photoInput').value = '';
+
+    document.getElementById('detailOverlay').classList.add('active');
+    startGPS();
+  }
+
+  function closeDetail() {
+    document.getElementById('detailOverlay').classList.remove('active');
+    if (gpsWatchId !== null) {
+      navigator.geolocation.clearWatch(gpsWatchId);
+      gpsWatchId = null;
+    }
+    currentPackage = null;
+    currentPhoto = null;
+    currentGPS = null;
+  }
+
+  function startGPS() {
+    const gpsBox = document.getElementById('gpsBox');
+    const gpsText = document.getElementById('gpsText');
+    gpsBox.classList.remove('ok', 'error');
+
+    if (!navigator.geolocation) {
+      gpsText.textContent = 'GPS no disponible en este dispositivo';
+      gpsBox.classList.add('error');
+      return;
+    }
+
+    gpsText.textContent = 'Buscando ubicación...';
+    if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
+
+    gpsWatchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        currentGPS = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: Math.round(pos.coords.accuracy)
+        };
+        gpsText.innerHTML = `<strong>${currentGPS.lat.toFixed(5)}, ${currentGPS.lng.toFixed(5)}</strong><br><small>Precisión: ±${currentGPS.accuracy} m</small>`;
+        gpsBox.classList.add('ok');
+        gpsBox.classList.remove('error');
+      },
+      (err) => {
+        gpsText.textContent = 'No se pudo obtener ubicación: ' + err.message;
+        gpsBox.classList.add('error');
+        gpsBox.classList.remove('ok');
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  }
+
+  function saveDelivery(status) {
+    if (!currentPackage) return;
+
+    if (status === 'delivered' && !currentPhoto) {
+      showToast('⚠ Toma una foto para marcar entregado');
+      return;
+    }
+
+    const note = document.getElementById('noteInput').value.trim();
+
+    const event = {
+      id: 'evt-' + Date.now(),
+      packageId: currentPackage.id,
+      guide: currentPackage.guide,
+      client: currentPackage.client,
+      address: currentPackage.address,
+      status: status,
+      photo: currentPhoto,
+      note: note,
+      gps: currentGPS,
+      timestamp: Date.now()
+    };
+
+    state.events.push(event);
+
+    const pkg = state.route.find(p => p.id === currentPackage.id);
+    if (pkg) pkg.status = status === 'delivered' ? 'delivered' : 'issue';
+
+    saveState();
+    closeDetail();
+    renderRoute();
+    renderEvents();
+
+    showToast(status === 'delivered' ? '✓ Entrega registrada' : '⚠ Novedad registrada');
+  }
+
+  function setupPhotoInput() {
+    const input = document.getElementById('photoInput');
+    const area = document.getElementById('photoArea');
+    const placeholder = document.getElementById('photoPlaceholder');
+    const preview = document.getElementById('photoPreview');
+    const retake = document.getElementById('retakeBtn');
+
+    area.addEventListener('click', () => input.click());
+    retake.addEventListener('click', (e) => { e.stopPropagation(); input.click(); });
+
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      showToast('Procesando foto...', 1200);
+      try {
+        const compressed = await compressImage(file);
+        currentPhoto = compressed;
+        preview.src = compressed;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        retake.classList.remove('hidden');
+        showToast('Foto lista ✓', 1200);
+      } catch (err) {
+        showToast('No se pudo procesar la foto');
+      } finally {
+        input.value = '';
+      }
+    });
+  }
+
+  function setupEventListeners() {
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab === 'ruta' ? 'viewRuta' : 'viewRegistro').classList.add('active');
+      });
+    });
+
+    document.getElementById('backBtn').addEventListener('click', closeDetail);
+    document.getElementById('btnEntregado').addEventListener('click', () => saveDelivery('delivered'));
+    document.getElementById('btnNovedad').addEventListener('click', () => saveDelivery('issue'));
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (!confirm('¿Reiniciar la demo de Ruta X? Se borrarán todas las entregas registradas.')) return;
+      localStorage.removeItem(KEYS.messenger);
+      localStorage.removeItem(KEYS.route);
+      localStorage.removeItem(KEYS.events);
+      init();
+      showToast('Demo reiniciada');
+    });
+  }
+
+  function init() {
+    loadState();
+    renderHeader();
+    renderRoute();
+    renderEvents();
+    setupPhotoInput();
+    setupEventListeners();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
