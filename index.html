@@ -25,7 +25,6 @@
   #app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg); padding-bottom: 80px; }
   .hidden { display: none !important; }
 
-  /* ---------- Header ---------- */
   .app-header { background: linear-gradient(135deg, #0A1F44 0%, #0E3A6C 55%, #1E5BB8 100%); color: white; padding: 16px 18px 14px; }
   .brand-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .brand { display: flex; align-items: center; gap: 10px; }
@@ -42,7 +41,6 @@
   .messenger-name { font-weight: 700; font-size: 15px; }
   .messenger-code { font-size: 12px; opacity: 0.8; margin-top: 2px; }
 
-  /* ---------- Sticky ---------- */
   .sticky-top { position: sticky; top: 0; z-index: 9; background: white; box-shadow: 0 2px 8px rgba(15,23,42,0.04); }
   .progress-wrap { padding: 12px 0 8px; }
   .progress-bar { height: 6px; background: #eef2f7; overflow: hidden; }
@@ -55,14 +53,11 @@
   .view { display: none; padding: 16px; }
   .view.active { display: block; }
 
-  /* ---------- Route cards ---------- */
   .route-list { display: flex; flex-direction: column; gap: 12px; }
   .package-card { background: white; border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(15,23,42,0.06); cursor: pointer; transition: transform 0.1s; border-left: 4px solid #d1d5db; }
   .package-card:active { transform: scale(0.98); }
-  .package-card.delivered { border-left-color: var(--green); background: #f0fdf4; cursor: default; }
   .package-card.issue { border-left-color: #f59e0b; background: #fffbeb; }
   .order-badge { width: 36px; height: 36px; border-radius: 10px; background: #eff6ff; color: var(--navy); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0; }
-  .package-card.delivered .order-badge { background: #dcfce7; color: var(--green-dark); }
   .package-card.issue .order-badge { background: #fef3c7; color: #b45309; }
   .package-info { flex: 1; min-width: 0; }
   .package-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px; }
@@ -79,8 +74,8 @@
   .empty { text-align: center; padding: 60px 20px; color: #9ca3af; font-size: 14px; line-height: 1.6; }
   .empty-icon { font-size: 44px; margin-bottom: 14px; opacity: 0.55; filter: grayscale(0.3); }
   .empty-title { color: var(--ink); font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .empty.celebrate .empty-icon { opacity: 1; filter: none; }
 
-  /* ---------- Overlays ---------- */
   .overlay { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; overflow-y: auto; }
   .overlay.active { display: block; }
 
@@ -91,7 +86,6 @@
   .detail-sub { font-size: 12px; opacity: 0.85; margin-top: 2px; }
   .detail-body { flex: 1; padding: 16px; }
 
-  /* ---------- Splash ---------- */
   .splash-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 32px 24px; background: linear-gradient(160deg, #0A1F44 0%, #0E3A6C 55%, #1E5BB8 100%); color: white; max-width: 480px; margin: 0 auto; }
   .splash-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
   .splash-brand .logo-mark { width: 52px; height: 52px; }
@@ -108,7 +102,6 @@
   .messenger-option-zone { font-size: 12px; opacity: 0.75; margin-top: 2px; }
   .messenger-option-arrow { font-size: 22px; opacity: 0.5; }
 
-  /* ---------- Info card ---------- */
   .info-card { background: white; border-radius: 14px; padding: 14px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(15,23,42,0.05); }
   .info-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #f3f4f6; gap: 12px; }
   .info-row:last-child { border-bottom: none; }
@@ -116,18 +109,25 @@
   .info-row span:last-child { text-align: right; font-weight: 600; color: var(--ink); }
 
   .section-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 4px; }
-
   .text-input { width: 100%; border: 1px solid #d1d5db; border-radius: 12px; padding: 12px 14px; font-family: inherit; font-size: 15px; outline: none; background: white; margin-bottom: 20px; }
   .text-input:focus { border-color: var(--navy); }
 
   .photo-area { background: white; border: 2px dashed #d1d5db; border-radius: 14px; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; margin-bottom: 8px; transition: border-color 0.15s; }
   .photo-area:active { border-color: var(--accent); }
+  .photo-area.no-photo-mode { border-style: solid; border-color: #cbd5e1; background: #f8fafc; }
   .photo-placeholder { text-align: center; color: #9ca3af; padding: 20px; }
   .camera-icon { font-size: 42px; margin-bottom: 8px; }
   .photo-placeholder .hint { font-size: 11px; margin-top: 4px; color: #d1d5db; }
   .photo-preview { width: 100%; height: 100%; object-fit: cover; }
+  .no-photo-mode-content { text-align: center; color: #64748b; padding: 20px; }
+  .no-photo-mode-content .no-photo-icon { font-size: 40px; margin-bottom: 8px; opacity: 0.5; }
+  .no-photo-mode-content .label { font-weight: 700; font-size: 14px; }
+  .no-photo-mode-content .hint { font-size: 11px; margin-top: 4px; }
 
-  .retake-btn { background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px; width: 100%; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; margin-bottom: 16px; }
+  .retake-btn { background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px; width: 100%; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; margin-bottom: 8px; }
+  .no-photo-btn { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 12px; width: 100%; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s; }
+  .no-photo-btn:active { background: #f1f5f9; }
+  .no-photo-btn.active { background: #f0f9ff; border-color: #3b82f6; color: #1e40af; border-style: solid; }
 
   .gps-box { background: white; border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(15,23,42,0.05); border-left: 4px solid #d1d5db; }
   .gps-box.ok { border-left-color: var(--green); }
@@ -145,7 +145,6 @@
   .action-btn.novedad { background: #fef3c7; color: #b45309; }
   .action-btn.entregado { background: var(--green); color: white; box-shadow: 0 2px 8px rgba(34,197,94,0.25); }
 
-  /* ---------- Events ---------- */
   .events-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
   .events-header h3 { font-size: 17px; color: var(--ink); }
   .events-count { font-size: 12px; color: var(--muted); font-weight: 600; }
@@ -161,7 +160,6 @@
   .event-note { font-size: 12px; color: var(--muted); font-style: italic; margin: 4px 0; }
   .event-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #9ca3af; margin-top: 4px; }
 
-  /* ---------- Event detail modal ---------- */
   .event-detail-screen { min-height: 100vh; display: flex; flex-direction: column; max-width: 480px; margin: 0 auto; background: var(--bg); }
   .event-detail-photo-wrap { background: #0A1F44; display: flex; align-items: center; justify-content: center; max-height: 340px; overflow: hidden; }
   .event-detail-photo-wrap img { max-width: 100%; max-height: 340px; object-fit: contain; display: block; }
@@ -177,12 +175,11 @@
   .ev-status-row .status-badge { font-size: 12px; padding: 5px 12px; }
   .ev-status-row .ev-time { font-size: 13px; color: var(--muted); font-weight: 600; }
 
-  /* ---------- Settings ---------- */
   .settings-screen { min-height: 100vh; display: flex; flex-direction: column; max-width: 480px; margin: 0 auto; background: var(--bg); }
   .settings-body { flex: 1; padding: 16px; }
   .settings-section { background: white; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(15,23,42,0.05); }
   .settings-section h3 { font-size: 15px; margin-bottom: 6px; color: var(--ink); }
-  .settings-section p { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+  .settings-section > p { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
   .settings-btn { width: 100%; padding: 13px; border-radius: 10px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-bottom: 8px; font-family: inherit; }
   .settings-btn:last-child { margin-bottom: 0; }
   .settings-btn.primary { background: var(--navy); color: white; }
@@ -196,14 +193,23 @@
   .csv-info-badge { display: inline-block; background: #eff6ff; color: var(--navy); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
   .app-version { text-align: center; font-size: 11px; color: #9ca3af; padding: 20px 0; }
 
-  /* ---------- Toast ---------- */
+  .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); gap: 12px; }
+  .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .toggle-row:first-of-type { padding-top: 8px; }
+  .toggle-label { flex: 1; min-width: 0; }
+  .toggle-label strong { display: block; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+  .toggle-label span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .toggle-switch { position: relative; width: 46px; height: 28px; background: #d1d5db; border-radius: 14px; cursor: pointer; transition: background 0.2s; flex-shrink: 0; border: none; }
+  .toggle-switch.on { background: var(--green); }
+  .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; background: white; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .toggle-switch.on::after { transform: translateX(18px); }
+
   .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy-deep); color: white; padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 200; max-width: 90%; text-align: center; box-shadow: 0 8px 20px rgba(10,31,68,0.3); }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- ============ SPLASH ============ -->
 <div id="splashOverlay" class="overlay active">
   <div class="splash-screen">
     <div class="splash-brand">
@@ -233,7 +239,6 @@
   </div>
 </div>
 
-<!-- ============ APP PRINCIPAL ============ -->
 <div id="app">
   <header class="app-header">
     <div class="brand-row">
@@ -284,7 +289,6 @@
   <main id="viewRegistro" class="view"><div id="eventsTable"></div></main>
 </div>
 
-<!-- ============ EVIDENCIA ============ -->
 <div id="detailOverlay" class="overlay">
   <div class="detail-screen">
     <div class="detail-header">
@@ -301,8 +305,10 @@
         <div class="info-row"><span class="label">Teléfono</span><span id="detailPhone">—</span></div>
       </div>
 
-      <div class="section-label">Nombre de quien recibe</div>
-      <input type="text" id="recipientInput" class="text-input" placeholder="Ej: María Fernández" autocomplete="off" />
+      <div id="recipientFieldWrap" class="hidden">
+        <div class="section-label">Nombre de quien recibe</div>
+        <input type="text" id="recipientInput" class="text-input" placeholder="Ej: María Fernández" autocomplete="off" />
+      </div>
 
       <div class="section-label">Fotografía de evidencia</div>
       <div class="photo-area" id="photoArea">
@@ -311,10 +317,16 @@
           <div>Toca para tomar foto</div>
           <div class="hint">Paquete entregado + fachada</div>
         </div>
+        <div class="no-photo-mode-content hidden" id="noPhotoModeContent">
+          <div class="no-photo-icon">🚫📷</div>
+          <div class="label">Entrega sin foto</div>
+          <div class="hint">No se adjuntará imagen</div>
+        </div>
         <img id="photoPreview" class="photo-preview hidden" alt="evidencia" />
         <input type="file" accept="image/*" capture="environment" id="photoInput" class="hidden" />
       </div>
       <button class="retake-btn hidden" id="retakeBtn">🔄 Tomar otra foto</button>
+      <button class="no-photo-btn hidden" id="noPhotoBtn">📷 Marcar entrega sin foto</button>
 
       <div class="section-label">Ubicación GPS</div>
       <div class="gps-box" id="gpsBox">
@@ -332,7 +344,6 @@
   </div>
 </div>
 
-<!-- ============ EVENT DETAIL MODAL ============ -->
 <div id="eventOverlay" class="overlay">
   <div class="event-detail-screen">
     <div class="detail-header">
@@ -347,7 +358,6 @@
   </div>
 </div>
 
-<!-- ============ SETTINGS ============ -->
 <div id="settingsOverlay" class="overlay">
   <div class="settings-screen">
     <div class="detail-header">
@@ -358,6 +368,24 @@
       </div>
     </div>
     <div class="settings-body">
+
+      <div class="settings-section">
+        <h3>🎯 Preferencias de captura</h3>
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <strong>Pedir nombre de quien recibe</strong>
+            <span>Si está activo, se pide el nombre al marcar Entregado</span>
+          </div>
+          <button class="toggle-switch" id="toggleRecipient" role="switch" aria-checked="false"></button>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <strong>Permitir entregas sin foto</strong>
+            <span>Muestra la opción "Sin foto" para casos que no ameritan</span>
+          </div>
+          <button class="toggle-switch" id="toggleNoPhoto" role="switch" aria-checked="false"></button>
+        </div>
+      </div>
 
       <div class="settings-section">
         <h3>📁 Cargar ruta desde archivo</h3>
@@ -386,7 +414,7 @@
         <button class="settings-btn danger" id="resetRouteBtn">Reiniciar mis datos</button>
       </div>
 
-      <div class="app-version">Ruta X · Demo local v0.3 · Sin conexión a servidor</div>
+      <div class="app-version">Ruta X · Demo local v0.5 · Sin conexión a servidor</div>
     </div>
   </div>
 </div>
@@ -397,10 +425,7 @@
 (function () {
   'use strict';
 
-  // ============================================================
-  // DATOS: 4 mensajeros con 4 rutas diferentes
-  // ============================================================
-  const MESSENGERS = {
+  var MESSENGERS = {
     JPK: {
       code: 'JPK', name: 'Julián Parra Klein', zone: 'Ruta Sur',
       route: [
@@ -434,16 +459,16 @@
     PRA: {
       code: 'PRA', name: 'Pedro Ramírez', zone: 'Ruta Oriente',
       route: [
-        { id: 'pra-1',  order: 1,  guide: 'CLL-4521', client: 'Isabella Castaño',    address: 'Calle 25 # 80-45, El Poblado',       phone: '312 555 0301' },
-        { id: 'pra-2',  order: 2,  guide: 'CLL-4522', client: 'Alejandro Narváez',   address: 'Carrera 80 # 13-30, Ciudad Córdoba', phone: '320 555 0302' },
-        { id: 'pra-3',  order: 3,  guide: 'CLL-4523', client: 'Manuela Zapata',      address: 'Calle 48 # 72-15, Salomia',          phone: '315 555 0303' },
-        { id: 'pra-4',  order: 4,  guide: 'CLL-4524', client: 'Nicolás Bedoya',      address: 'Avenida 3E # 55-22, Calima',         phone: '311 555 0304' },
-        { id: 'pra-5',  order: 5,  guide: 'CLL-4525', client: 'Laura Restrepo',      address: 'Carrera 100 # 5-10, Cañaveralejo',   phone: '318 555 0305' },
-        { id: 'pra-6',  order: 6,  guide: 'CLL-4526', client: 'Santiago Henao',      address: 'Calle 15 # 90-45, Meléndez',         phone: '313 555 0306' },
-        { id: 'pra-7',  order: 7,  guide: 'CLL-4527', client: 'Daniela Cardona',     address: 'Avenida 5N # 60-80, La Campiña',     phone: '316 555 0307' },
-        { id: 'pra-8',  order: 8,  guide: 'CLL-4528', client: 'Andrés Montoya',      address: 'Calle 70 # 100-25, Pance',           phone: '314 555 0308' },
+        { id: 'pra-1',  order: 1,  guide: 'CLL-4521', client: 'Isabella Castaño',     address: 'Calle 25 # 80-45, El Poblado',       phone: '312 555 0301' },
+        { id: 'pra-2',  order: 2,  guide: 'CLL-4522', client: 'Alejandro Narváez',    address: 'Carrera 80 # 13-30, Ciudad Córdoba', phone: '320 555 0302' },
+        { id: 'pra-3',  order: 3,  guide: 'CLL-4523', client: 'Manuela Zapata',       address: 'Calle 48 # 72-15, Salomia',          phone: '315 555 0303' },
+        { id: 'pra-4',  order: 4,  guide: 'CLL-4524', client: 'Nicolás Bedoya',       address: 'Avenida 3E # 55-22, Calima',         phone: '311 555 0304' },
+        { id: 'pra-5',  order: 5,  guide: 'CLL-4525', client: 'Laura Restrepo',       address: 'Carrera 100 # 5-10, Cañaveralejo',   phone: '318 555 0305' },
+        { id: 'pra-6',  order: 6,  guide: 'CLL-4526', client: 'Santiago Henao',       address: 'Calle 15 # 90-45, Meléndez',         phone: '313 555 0306' },
+        { id: 'pra-7',  order: 7,  guide: 'CLL-4527', client: 'Daniela Cardona',      address: 'Avenida 5N # 60-80, La Campiña',     phone: '316 555 0307' },
+        { id: 'pra-8',  order: 8,  guide: 'CLL-4528', client: 'Andrés Montoya',       address: 'Calle 70 # 100-25, Pance',           phone: '314 555 0308' },
         { id: 'pra-9',  order: 9,  guide: 'CLL-4529', client: 'Catalina Aristizábal', address: 'Carrera 56 # 8-45, El Retiro',       phone: '319 555 0309' },
-        { id: 'pra-10', order: 10, guide: 'CLL-4530', client: 'Camilo Betancur',     address: 'Calle 13 # 66-20, Champagnat',       phone: '321 555 0310' }
+        { id: 'pra-10', order: 10, guide: 'CLL-4530', client: 'Camilo Betancur',      address: 'Calle 13 # 66-20, Champagnat',       phone: '321 555 0310' }
       ]
     },
     ATO: {
@@ -463,104 +488,106 @@
     }
   };
 
-  // ============================================================
-  // STORAGE helpers
-  // ============================================================
-  const CURRENT_KEY = 'rutax_current_v3';
-  const dataKey = (code, type) => `rutax_${code}_${type}_v3`;
+  var CURRENT_KEY = 'rutax_current_v5';
+  function dataKey(code, type) { return 'rutax_' + code + '_' + type + '_v5'; }
+  var DEFAULT_SETTINGS = { requireRecipient: false, allowNoPhoto: false };
 
-  const state = { messenger: null, route: [], events: [] };
-  let currentPackage = null;
-  let currentPhoto = null;
-  let currentGPS = null;
-  let gpsWatchId = null;
-  let toastTimer = null;
-  let pendingCSVItems = null;
+  var state = {
+    messenger: null,
+    route: [],
+    events: [],
+    settings: Object.assign({}, DEFAULT_SETTINGS)
+  };
 
-  // ============================================================
-  // Persistencia
-  // ============================================================
+  var currentPackage = null;
+  var currentPhoto = null;
+  var currentNoPhoto = false;
+  var currentGPS = null;
+  var gpsWatchId = null;
+  var toastTimer = null;
+  var pendingCSVItems = null;
+
   function saveMessengerData() {
     if (!state.messenger) return;
     try {
       localStorage.setItem(dataKey(state.messenger.code, 'route'), JSON.stringify(state.route));
       localStorage.setItem(dataKey(state.messenger.code, 'events'), JSON.stringify(state.events));
+      localStorage.setItem(dataKey(state.messenger.code, 'settings'), JSON.stringify(state.settings));
     } catch (e) {
-      showToast('⚠ Almacenamiento lleno. Reinicia o cambia de mensajero.');
+      showToast('⚠ Almacenamiento lleno.');
     }
   }
 
   function loadMessengerData(code) {
-    const def = MESSENGERS[code];
+    var def = MESSENGERS[code];
     if (!def) return;
-
     state.messenger = { code: def.code, name: def.name, zone: def.zone };
 
-    const savedRoute = localStorage.getItem(dataKey(code, 'route'));
-    const savedEvents = localStorage.getItem(dataKey(code, 'events'));
+    var savedRoute = localStorage.getItem(dataKey(code, 'route'));
+    var savedEvents = localStorage.getItem(dataKey(code, 'events'));
+    var savedSettings = localStorage.getItem(dataKey(code, 'settings'));
 
-    if (savedRoute) {
-      try { state.route = JSON.parse(savedRoute); } catch (e) { state.route = freshRoute(def); }
-    } else {
-      state.route = freshRoute(def);
-    }
+    state.route = savedRoute ? safeParse(savedRoute, freshRoute(def)) : freshRoute(def);
+    state.events = savedEvents ? safeParse(savedEvents, []) : [];
 
-    if (savedEvents) {
-      try { state.events = JSON.parse(savedEvents); } catch (e) { state.events = []; }
-    } else {
-      state.events = [];
-    }
+    var parsedSettings = savedSettings ? safeParse(savedSettings, {}) : {};
+    state.settings = Object.assign({}, DEFAULT_SETTINGS, parsedSettings);
 
-    // Asegurar defaults de status
-    state.route.forEach(p => { if (!p.status) p.status = 'pending'; });
-
+    state.route.forEach(function (p) { if (!p.status) p.status = 'pending'; });
     saveMessengerData();
   }
 
-  function freshRoute(def) {
-    return def.route.map(p => ({
-      id: p.id, order: p.order, guide: p.guide, client: p.client,
-      address: p.address, phone: p.phone, status: 'pending'
-    }));
+  function safeParse(str, fallback) {
+    try { return JSON.parse(str); } catch (e) { return fallback; }
   }
 
-  // ============================================================
-  // Utilidades
-  // ============================================================
-  function showToast(msg, duration = 2400) {
-    const t = document.getElementById('toast');
+  function freshRoute(def) {
+    return def.route.map(function (p) {
+      return {
+        id: p.id, order: p.order, guide: p.guide, client: p.client,
+        address: p.address, phone: p.phone, status: 'pending'
+      };
+    });
+  }
+
+  function showToast(msg, duration) {
+    duration = duration || 2400;
+    var t = document.getElementById('toast');
     t.textContent = msg;
     t.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), duration);
+    toastTimer = setTimeout(function () { t.classList.remove('show'); }, duration);
   }
 
   function formatTime(ts) {
-    const d = new Date(ts);
-    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    const day = String(d.getDate()).padStart(2, '0');
-    const hh = String(d.getHours()).padStart(2, '0');
-    const mm = String(d.getMinutes()).padStart(2, '0');
-    return `${day} ${months[d.getMonth()]} · ${hh}:${mm}`;
+    var d = new Date(ts);
+    var months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var day = String(d.getDate()).padStart(2, '0');
+    var hh = String(d.getHours()).padStart(2, '0');
+    var mm = String(d.getMinutes()).padStart(2, '0');
+    return day + ' ' + months[d.getMonth()] + ' · ' + hh + ':' + mm;
   }
 
   function formatFullDate(ts) {
-    const d = new Date(ts);
-    const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-    const hh = String(d.getHours()).padStart(2, '0');
-    const mm = String(d.getMinutes()).padStart(2, '0');
-    return `${days[d.getDay()]} ${d.getDate()} de ${months[d.getMonth()]} · ${hh}:${mm}`;
+    var d = new Date(ts);
+    var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    var months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    var hh = String(d.getHours()).padStart(2, '0');
+    var mm = String(d.getMinutes()).padStart(2, '0');
+    return days[d.getDay()] + ' ' + d.getDate() + ' de ' + months[d.getMonth()] + ' · ' + hh + ':' + mm;
   }
 
-  function compressImage(file, maxWidth = 700, quality = 0.55) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
+  function compressImage(file, maxWidth, quality) {
+    maxWidth = maxWidth || 700;
+    quality = quality || 0.55;
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
         URL.revokeObjectURL(url);
-        const canvas = document.createElement('canvas');
-        let { width, height } = img;
+        var canvas = document.createElement('canvas');
+        var width = img.width;
+        var height = img.height;
         if (width > maxWidth) {
           height = Math.round((height * maxWidth) / width);
           width = maxWidth;
@@ -575,34 +602,38 @@
     });
   }
 
-  // ============================================================
-  // Splash
-  // ============================================================
   function renderSplash() {
-    const box = document.getElementById('messengerOptions');
-    box.innerHTML = Object.values(MESSENGERS).map(m => `
-      <button class="messenger-option" data-code="${m.code}">
-        <span class="messenger-option-avatar">${m.code}</span>
-        <span class="messenger-option-info">
-          <div class="messenger-option-name">${m.name}</div>
-          <div class="messenger-option-zone">${m.zone} · ${m.route.length} entregas</div>
-        </span>
-        <span class="messenger-option-arrow">›</span>
-      </button>
-    `).join('');
+    var box = document.getElementById('messengerOptions');
+    var html = '';
+    var codes = Object.keys(MESSENGERS);
+    for (var i = 0; i < codes.length; i++) {
+      var m = MESSENGERS[codes[i]];
+      html += '<button class="messenger-option" data-code="' + m.code + '">' +
+        '<span class="messenger-option-avatar">' + m.code + '</span>' +
+        '<span class="messenger-option-info">' +
+          '<div class="messenger-option-name">' + m.name + '</div>' +
+          '<div class="messenger-option-zone">' + m.zone + ' · ' + m.route.length + ' entregas</div>' +
+        '</span>' +
+        '<span class="messenger-option-arrow">›</span>' +
+      '</button>';
+    }
+    box.innerHTML = html;
 
-    box.querySelectorAll('.messenger-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const code = btn.dataset.code;
-        localStorage.setItem(CURRENT_KEY, code);
-        loadMessengerData(code);
-        renderHeader();
-        renderRoute();
-        renderEvents();
-        hideSplash();
-        showToast(`Bienvenido, ${MESSENGERS[code].name.split(' ')[0]}`);
-      });
-    });
+    var btns = box.querySelectorAll('.messenger-option');
+    for (var j = 0; j < btns.length; j++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          var code = btn.getAttribute('data-code');
+          localStorage.setItem(CURRENT_KEY, code);
+          loadMessengerData(code);
+          renderHeader();
+          renderRoute();
+          renderEvents();
+          hideSplash();
+          showToast('Bienvenido, ' + MESSENGERS[code].name.split(' ')[0]);
+        });
+      })(btns[j]);
+    }
   }
 
   function showSplash() {
@@ -615,126 +646,193 @@
     document.getElementById('splashOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // Render principal
-  // ============================================================
   function renderHeader() {
     if (!state.messenger) return;
     document.getElementById('messengerName').textContent = state.messenger.name;
     document.getElementById('avatar').textContent = state.messenger.code;
-    document.getElementById('messengerCode').textContent = `Código: ${state.messenger.code} · ${state.messenger.zone}`;
+    document.getElementById('messengerCode').textContent = 'Código: ' + state.messenger.code + ' · ' + state.messenger.zone;
   }
 
   function renderRoute() {
-    const list = document.getElementById('routeList');
-    if (!state.route.length) {
-      list.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">📦</div>
-          <div class="empty-title">No hay paquetes en la ruta</div>
-          <div>Cuando la oficina te asigne entregas, aparecerán aquí.</div>
-        </div>`;
-    } else {
-      list.innerHTML = state.route.map(p => {
-        const issues = state.events.filter(e => e.packageId === p.id && e.status === 'issue').length;
-        const icon = p.status === 'delivered' ? '✓' : p.status === 'issue' ? '⚠' : '○';
-        const label = p.status === 'delivered' ? 'Entregado' : p.status === 'issue' ? 'Novedad' : 'Pendiente';
-        return `
-          <div class="package-card ${p.status}" data-id="${p.id}">
-            <div class="order-badge">${p.order}</div>
-            <div class="package-info">
-              <div class="package-top">
-                <span class="guide">${p.guide}</span>
-                <span class="status-badge ${p.status}">${icon} ${label}</span>
-              </div>
-              <div class="client">${p.client}</div>
-              <div class="address">${p.address}</div>
-              ${issues > 0 ? `<div class="issue-count">⚠ ${issues} novedad${issues > 1 ? 'es' : ''} previa${issues > 1 ? 's' : ''}</div>` : ''}
-            </div>
-            <div class="chevron">›</div>
-          </div>`;
-      }).join('');
+    var list = document.getElementById('routeList');
+    var visible = state.route.filter(function (p) { return p.status !== 'delivered'; });
 
-      list.querySelectorAll('.package-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const pkg = state.route.find(p => p.id === card.dataset.id);
-          if (pkg && pkg.status !== 'delivered') openDetail(pkg);
-        });
-      });
+    if (!state.route.length) {
+      list.innerHTML = '<div class="empty">' +
+        '<div class="empty-icon">📦</div>' +
+        '<div class="empty-title">No hay paquetes en la ruta</div>' +
+        '<div>Cuando la oficina te asigne entregas, aparecerán aquí.</div>' +
+      '</div>';
+    } else if (!visible.length) {
+      list.innerHTML = '<div class="empty celebrate">' +
+        '<div class="empty-icon">🎉</div>' +
+        '<div class="empty-title">¡Todo entregado!</div>' +
+        '<div>Revisa la pestaña Registro para ver el historial completo.</div>' +
+      '</div>';
+    } else {
+      var html = '';
+      for (var i = 0; i < visible.length; i++) {
+        var p = visible[i];
+        var issues = state.events.filter(function (e) {
+          return e.packageId === p.id && e.status === 'issue';
+        }).length;
+        var label = p.status === 'issue' ? 'Novedad' : 'Pendiente';
+        var icon = p.status === 'issue' ? '⚠' : '○';
+        html += '<div class="package-card ' + p.status + '" data-id="' + p.id + '">' +
+          '<div class="order-badge">' + p.order + '</div>' +
+          '<div class="package-info">' +
+            '<div class="package-top">' +
+              '<span class="guide">' + p.guide + '</span>' +
+              '<span class="status-badge ' + p.status + '">' + icon + ' ' + label + '</span>' +
+            '</div>' +
+            '<div class="client">' + p.client + '</div>' +
+            '<div class="address">' + p.address + '</div>' +
+            (issues > 0 ? '<div class="issue-count">⚠ ' + issues + ' novedad' + (issues > 1 ? 'es' : '') + ' previa' + (issues > 1 ? 's' : '') + '</div>' : '') +
+          '</div>' +
+          '<div class="chevron">›</div>' +
+        '</div>';
+      }
+      list.innerHTML = html;
+
+      var cards = list.querySelectorAll('.package-card');
+      for (var k = 0; k < cards.length; k++) {
+        (function (card) {
+          card.addEventListener('click', function () {
+            var id = card.getAttribute('data-id');
+            var pkg = null;
+            for (var m = 0; m < state.route.length; m++) {
+              if (state.route[m].id === id) { pkg = state.route[m]; break; }
+            }
+            if (pkg) openDetail(pkg);
+          });
+        })(cards[k]);
+      }
     }
 
-    const total = state.route.length || 1;
-    const done = state.route.filter(p => p.status === 'delivered').length;
-    document.getElementById('progressText').textContent = `${done} de ${state.route.length} entregados`;
-    document.getElementById('progressFill').style.width = `${(done / total) * 100}%`;
+    var total = state.route.length || 1;
+    var done = state.route.filter(function (p) { return p.status === 'delivered'; }).length;
+    document.getElementById('progressText').textContent = done + ' de ' + state.route.length + ' entregados';
+    document.getElementById('progressFill').style.width = ((done / total) * 100) + '%';
   }
 
   function renderEvents() {
-    const box = document.getElementById('eventsTable');
+    var box = document.getElementById('eventsTable');
     if (!state.events.length) {
-      box.innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">📋</div>
-          <div class="empty-title">Aún no hay registros</div>
-          <div>Comienza a entregar paquetes para ver aquí tu historial.</div>
-        </div>`;
+      box.innerHTML = '<div class="empty">' +
+        '<div class="empty-icon">📋</div>' +
+        '<div class="empty-title">Aún no hay registros</div>' +
+        '<div>Comienza a entregar paquetes para ver aquí tu historial.</div>' +
+      '</div>';
       return;
     }
-    const sorted = [...state.events].sort((a, b) => b.timestamp - a.timestamp);
-    box.innerHTML = `
-      <div class="events-header">
-        <h3>Registro de entregas</h3>
-        <span class="events-count">${state.events.length} evento${state.events.length > 1 ? 's' : ''}</span>
-      </div>
-      ${sorted.map(e => `
-        <div class="event-card" data-id="${e.id}">
-          <div class="event-photo">
-            ${e.photo ? `<img src="${e.photo}" alt="foto" />` : '<div class="no-photo">Sin foto</div>'}
-          </div>
-          <div class="event-info">
-            <div class="event-top">
-              <span class="event-guide">${e.guide}</span>
-              <span class="status-badge ${e.status}">${e.status === 'delivered' ? '✓ Entregado' : '⚠ Novedad'}</span>
-            </div>
-            <div class="event-address">${e.address}</div>
-            ${e.note ? `<div class="event-note">"${e.note}"</div>` : ''}
-            <div class="event-meta">
-              <span>🕒 ${formatTime(e.timestamp)}</span>
-              ${e.gps ? `<span>📍 ${e.gps.lat.toFixed(5)}, ${e.gps.lng.toFixed(5)}</span>` : ''}
-            </div>
-          </div>
-        </div>`).join('')}
-    `;
+    var sorted = state.events.slice().sort(function (a, b) { return b.timestamp - a.timestamp; });
 
-    box.querySelectorAll('.event-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const evt = state.events.find(e => e.id === card.dataset.id);
-        if (evt) openEventDetail(evt);
-      });
-    });
+    var html = '<div class="events-header">' +
+      '<h3>Registro de entregas</h3>' +
+      '<span class="events-count">' + state.events.length + ' evento' + (state.events.length > 1 ? 's' : '') + '</span>' +
+    '</div>';
+
+    for (var i = 0; i < sorted.length; i++) {
+      var e = sorted[i];
+      var statusText = e.status === 'delivered' ? '✓ Entregado' : '⚠ Novedad';
+      html += '<div class="event-card" data-id="' + e.id + '">' +
+        '<div class="event-photo">' +
+          (e.photo ? '<img src="' + e.photo + '" alt="foto" />' : '<div class="no-photo">Sin foto</div>') +
+        '</div>' +
+        '<div class="event-info">' +
+          '<div class="event-top">' +
+            '<span class="event-guide">' + e.guide + '</span>' +
+            '<span class="status-badge ' + e.status + '">' + statusText + '</span>' +
+          '</div>' +
+          '<div class="event-address">' + e.address + '</div>' +
+          (e.recipient ? '<div class="event-note">Recibió: ' + e.recipient + '</div>' : '') +
+          (e.note ? '<div class="event-note">"' + e.note + '"</div>' : '') +
+          '<div class="event-meta">' +
+            '<span>🕒 ' + formatTime(e.timestamp) + '</span>' +
+            (e.gps ? '<span>📍 ' + e.gps.lat.toFixed(5) + ', ' + e.gps.lng.toFixed(5) + '</span>' : '') +
+            (e.noPhoto ? '<span>🚫 Sin foto</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    box.innerHTML = html;
+
+    var cards = box.querySelectorAll('.event-card');
+    for (var j = 0; j < cards.length; j++) {
+      (function (card) {
+        card.addEventListener('click', function () {
+          var id = card.getAttribute('data-id');
+          var evt = null;
+          for (var m = 0; m < state.events.length; m++) {
+            if (state.events[m].id === id) { evt = state.events[m]; break; }
+          }
+          if (evt) openEventDetail(evt);
+        });
+      })(cards[j]);
+    }
   }
 
-  // ============================================================
-  // Evidencia
-  // ============================================================
+  function updateEvidenceFormVisibility() {
+    var recipientWrap = document.getElementById('recipientFieldWrap');
+    if (state.settings.requireRecipient) recipientWrap.classList.remove('hidden');
+    else recipientWrap.classList.add('hidden');
+
+    var noPhotoBtn = document.getElementById('noPhotoBtn');
+    if (state.settings.allowNoPhoto && !currentPhoto && !currentNoPhoto) {
+      noPhotoBtn.classList.remove('hidden');
+      noPhotoBtn.classList.remove('active');
+      noPhotoBtn.innerHTML = '📷 Marcar entrega sin foto';
+    } else if (state.settings.allowNoPhoto && currentNoPhoto) {
+      noPhotoBtn.classList.remove('hidden');
+      noPhotoBtn.classList.add('active');
+      noPhotoBtn.innerHTML = '✓ Entrega sin foto marcada · toca para quitar';
+    } else {
+      noPhotoBtn.classList.add('hidden');
+    }
+
+    var area = document.getElementById('photoArea');
+    if (currentNoPhoto) area.classList.add('no-photo-mode');
+    else area.classList.remove('no-photo-mode');
+
+    var placeholder = document.getElementById('photoPlaceholder');
+    var noPhotoContent = document.getElementById('noPhotoModeContent');
+    var preview = document.getElementById('photoPreview');
+    if (currentPhoto) {
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+      noPhotoContent.classList.add('hidden');
+    } else if (currentNoPhoto) {
+      preview.classList.add('hidden');
+      placeholder.classList.add('hidden');
+      noPhotoContent.classList.remove('hidden');
+    } else {
+      preview.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+      noPhotoContent.classList.add('hidden');
+    }
+
+    var retake = document.getElementById('retakeBtn');
+    if (currentPhoto) retake.classList.remove('hidden');
+    else retake.classList.add('hidden');
+  }
+
   function openDetail(pkg) {
     currentPackage = pkg;
     currentPhoto = null;
+    currentNoPhoto = false;
     currentGPS = null;
 
-    document.getElementById('detailGuide').textContent = `Guía ${pkg.guide}`;
+    document.getElementById('detailGuide').textContent = 'Guía ' + pkg.guide;
     document.getElementById('detailClient').textContent = pkg.client;
     document.getElementById('detailAddress').textContent = pkg.address;
     document.getElementById('detailPhone').textContent = pkg.phone;
 
     document.getElementById('recipientInput').value = '';
-    document.getElementById('photoPreview').classList.add('hidden');
     document.getElementById('photoPreview').src = '';
-    document.getElementById('photoPlaceholder').classList.remove('hidden');
-    document.getElementById('retakeBtn').classList.add('hidden');
     document.getElementById('noteInput').value = '';
     document.getElementById('photoInput').value = '';
 
+    updateEvidenceFormVisibility();
     document.getElementById('detailOverlay').classList.add('active');
     startGPS();
   }
@@ -747,12 +845,13 @@
     }
     currentPackage = null;
     currentPhoto = null;
+    currentNoPhoto = false;
     currentGPS = null;
   }
 
   function startGPS() {
-    const gpsBox = document.getElementById('gpsBox');
-    const gpsText = document.getElementById('gpsText');
+    var gpsBox = document.getElementById('gpsBox');
+    var gpsText = document.getElementById('gpsText');
     gpsBox.classList.remove('ok', 'error');
 
     if (!navigator.geolocation) {
@@ -764,17 +863,17 @@
     if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
 
     gpsWatchId = navigator.geolocation.watchPosition(
-      (pos) => {
+      function (pos) {
         currentGPS = {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
           accuracy: Math.round(pos.coords.accuracy)
         };
-        gpsText.innerHTML = `<strong>${currentGPS.lat.toFixed(5)}, ${currentGPS.lng.toFixed(5)}</strong><br><small>Precisión: ±${currentGPS.accuracy} m</small>`;
+        gpsText.innerHTML = '<strong>' + currentGPS.lat.toFixed(5) + ', ' + currentGPS.lng.toFixed(5) + '</strong><br><small>Precisión: ±' + currentGPS.accuracy + ' m</small>';
         gpsBox.classList.add('ok');
         gpsBox.classList.remove('error');
       },
-      (err) => {
+      function (err) {
         gpsText.textContent = 'No se pudo obtener ubicación: ' + err.message;
         gpsBox.classList.add('error');
         gpsBox.classList.remove('ok');
@@ -786,19 +885,28 @@
   function saveDelivery(status) {
     if (!currentPackage) return;
 
-    if (status === 'delivered' && !currentPhoto) {
-      showToast('⚠ Toma una foto para marcar entregado');
-      return;
-    }
-    const recipient = document.getElementById('recipientInput').value.trim();
-    if (status === 'delivered' && !recipient) {
-      showToast('⚠ Escribe quién recibe el paquete');
-      return;
+    if (status === 'delivered') {
+      if (!currentPhoto && !(state.settings.allowNoPhoto && currentNoPhoto)) {
+        if (state.settings.allowNoPhoto) {
+          showToast('⚠ Toma una foto o marca "sin foto"');
+        } else {
+          showToast('⚠ Toma una foto para marcar entregado');
+        }
+        return;
+      }
+      if (state.settings.requireRecipient) {
+        var r = document.getElementById('recipientInput').value.trim();
+        if (!r) {
+          showToast('⚠ Escribe quién recibe el paquete');
+          return;
+        }
+      }
     }
 
-    const note = document.getElementById('noteInput').value.trim();
+    var recipient = document.getElementById('recipientInput').value.trim();
+    var note = document.getElementById('noteInput').value.trim();
 
-    const event = {
+    var event = {
       id: 'evt-' + Date.now(),
       packageId: currentPackage.id,
       guide: currentPackage.guide,
@@ -807,6 +915,7 @@
       recipient: recipient,
       status: status,
       photo: currentPhoto,
+      noPhoto: currentNoPhoto && !currentPhoto,
       note: note,
       gps: currentGPS,
       messengerCode: state.messenger.code,
@@ -816,7 +925,10 @@
 
     state.events.push(event);
 
-    const pkg = state.route.find(p => p.id === currentPackage.id);
+    var pkg = null;
+    for (var i = 0; i < state.route.length; i++) {
+      if (state.route[i].id === currentPackage.id) { pkg = state.route[i]; break; }
+    }
     if (pkg) pkg.status = status === 'delivered' ? 'delivered' : 'issue';
 
     saveMessengerData();
@@ -826,75 +938,80 @@
     showToast(status === 'delivered' ? '✓ Entrega registrada' : '⚠ Novedad registrada');
   }
 
-  // ============================================================
-  // Event detail modal
-  // ============================================================
   function openEventDetail(evt) {
-    document.getElementById('eventDetailGuide').textContent = `Guía ${evt.guide}`;
+    document.getElementById('eventDetailGuide').textContent = 'Guía ' + evt.guide;
 
-    const photoWrap = document.getElementById('eventPhotoWrap');
+    var photoWrap = document.getElementById('eventPhotoWrap');
     if (evt.photo) {
-      photoWrap.innerHTML = `<img src="${evt.photo}" alt="Evidencia" />`;
+      photoWrap.innerHTML = '<img src="' + evt.photo + '" alt="Evidencia" />';
+    } else if (evt.noPhoto) {
+      photoWrap.innerHTML = '<div class="event-detail-photo-empty">Entrega marcada sin foto</div>';
     } else {
-      photoWrap.innerHTML = `<div class="event-detail-photo-empty">Sin fotografía de evidencia</div>`;
+      photoWrap.innerHTML = '<div class="event-detail-photo-empty">Sin fotografía de evidencia</div>';
     }
 
-    const statusLabel = evt.status === 'delivered' ? '✓ Entregado' : '⚠ Novedad';
-    const statusClass = evt.status === 'delivered' ? 'delivered' : 'issue';
+    var statusLabel = evt.status === 'delivered' ? '✓ Entregado' : '⚠ Novedad';
+    var statusClass = evt.status === 'delivered' ? 'delivered' : 'issue';
 
-    document.getElementById('eventDetailBody').innerHTML = `
-      <div class="ev-status-row">
-        <span class="status-badge ${statusClass}">${statusLabel}</span>
-        <span class="ev-time">${formatTime(evt.timestamp)}</span>
-      </div>
+    var html = '';
+    html += '<div class="ev-status-row">' +
+      '<span class="status-badge ' + statusClass + '">' + statusLabel + '</span>' +
+      '<span class="ev-time">' + formatTime(evt.timestamp) + '</span>' +
+    '</div>';
 
-      <div class="ev-block">
-        <div class="ev-label">Cliente</div>
-        <div class="ev-value">${evt.client || '—'}</div>
-      </div>
+    html += '<div class="ev-block">' +
+      '<div class="ev-label">Cliente</div>' +
+      '<div class="ev-value">' + (evt.client || '—') + '</div>' +
+    '</div>';
 
-      <div class="ev-block">
-        <div class="ev-label">Dirección</div>
-        <div class="ev-value">${evt.address || '—'}</div>
-      </div>
+    html += '<div class="ev-block">' +
+      '<div class="ev-label">Dirección</div>' +
+      '<div class="ev-value">' + (evt.address || '—') + '</div>' +
+    '</div>';
 
-      ${evt.recipient ? `
-      <div class="ev-block">
-        <div class="ev-label">Recibido por</div>
-        <div class="ev-value">${evt.recipient}</div>
-      </div>` : ''}
+    if (evt.recipient) {
+      html += '<div class="ev-block">' +
+        '<div class="ev-label">Recibido por</div>' +
+        '<div class="ev-value">' + evt.recipient + '</div>' +
+      '</div>';
+    }
 
-      ${evt.note ? `
-      <div class="ev-block note">
-        <div class="ev-label">Nota del mensajero</div>
-        <div class="ev-value">"${evt.note}"</div>
-      </div>` : ''}
+    if (evt.note) {
+      html += '<div class="ev-block note">' +
+        '<div class="ev-label">Nota del mensajero</div>' +
+        '<div class="ev-value">"' + evt.note + '"</div>' +
+      '</div>';
+    }
 
-      <div class="ev-grid">
-        <div class="ev-block">
-          <div class="ev-label">Fecha y hora</div>
-          <div class="ev-value" style="font-size:13px;">${formatFullDate(evt.timestamp)}</div>
-        </div>
-        <div class="ev-block">
-          <div class="ev-label">Mensajero</div>
-          <div class="ev-value" style="font-size:13px;">${evt.messengerName || state.messenger.name}<br><span style="color:var(--muted);font-weight:500;font-size:11px;">${evt.messengerCode || state.messenger.code}</span></div>
-        </div>
-      </div>
+    html += '<div class="ev-grid">' +
+      '<div class="ev-block">' +
+        '<div class="ev-label">Fecha y hora</div>' +
+        '<div class="ev-value" style="font-size:13px;">' + formatFullDate(evt.timestamp) + '</div>' +
+      '</div>' +
+      '<div class="ev-block">' +
+        '<div class="ev-label">Mensajero</div>' +
+        '<div class="ev-value" style="font-size:13px;">' + (evt.messengerName || state.messenger.name) +
+          '<br><span style="color:var(--muted);font-weight:500;font-size:11px;">' + (evt.messengerCode || state.messenger.code) + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
 
-      ${evt.gps ? `
-      <div class="ev-block">
-        <div class="ev-label">Ubicación GPS</div>
-        <div class="ev-value" style="font-size:13px;">
-          ${evt.gps.lat.toFixed(5)}, ${evt.gps.lng.toFixed(5)}
-          ${evt.gps.accuracy ? `<br><span style="color:var(--muted);font-weight:500;font-size:11px;">Precisión ±${evt.gps.accuracy} m</span>` : ''}
-        </div>
-      </div>` : `
-      <div class="ev-block">
-        <div class="ev-label">Ubicación GPS</div>
-        <div class="ev-value" style="font-size:13px;color:var(--muted);">No disponible</div>
-      </div>`}
-    `;
+    if (evt.gps) {
+      html += '<div class="ev-block">' +
+        '<div class="ev-label">Ubicación GPS</div>' +
+        '<div class="ev-value" style="font-size:13px;">' +
+          evt.gps.lat.toFixed(5) + ', ' + evt.gps.lng.toFixed(5) +
+          (evt.gps.accuracy ? '<br><span style="color:var(--muted);font-weight:500;font-size:11px;">Precisión ±' + evt.gps.accuracy + ' m</span>' : '') +
+        '</div>' +
+      '</div>';
+    } else {
+      html += '<div class="ev-block">' +
+        '<div class="ev-label">Ubicación GPS</div>' +
+        '<div class="ev-value" style="font-size:13px;color:var(--muted);">No disponible</div>' +
+      '</div>';
+    }
 
+    document.getElementById('eventDetailBody').innerHTML = html;
     document.getElementById('eventOverlay').classList.add('active');
   }
 
@@ -902,34 +1019,36 @@
     document.getElementById('eventOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // Settings
-  // ============================================================
   function openSettings() {
     document.getElementById('settingsAccountText').textContent =
-      `Estás como: ${state.messenger.name} (${state.messenger.code}) · ${state.messenger.zone}`;
+      'Estás como: ' + state.messenger.name + ' (' + state.messenger.code + ') · ' + state.messenger.zone;
     document.getElementById('csvPreviewBox').classList.add('hidden');
     pendingCSVItems = null;
+    updateTogglesUI();
     document.getElementById('settingsOverlay').classList.add('active');
   }
   function closeSettings() {
     document.getElementById('settingsOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // CSV parsing
-  // ============================================================
-  function parseCSV(text) {
-    const rows = [];
-    let row = [];
-    let cur = '';
-    let inQuotes = false;
+  function updateTogglesUI() {
+    var tr = document.getElementById('toggleRecipient');
+    var tn = document.getElementById('toggleNoPhoto');
+    if (state.settings.requireRecipient) tr.classList.add('on'); else tr.classList.remove('on');
+    tr.setAttribute('aria-checked', state.settings.requireRecipient ? 'true' : 'false');
+    if (state.settings.allowNoPhoto) tn.classList.add('on'); else tn.classList.remove('on');
+    tn.setAttribute('aria-checked', state.settings.allowNoPhoto ? 'true' : 'false');
+  }
 
-    // strip BOM
+  function parseCSV(text) {
+    var rows = [];
+    var row = [];
+    var cur = '';
+    var inQuotes = false;
     if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
 
-    for (let i = 0; i < text.length; i++) {
-      const c = text[i];
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
       if (inQuotes) {
         if (c === '"') {
           if (text[i + 1] === '"') { cur += '"'; i++; }
@@ -953,30 +1072,34 @@
   }
 
   function detectColumns(header) {
-    const map = { guide: -1, client: -1, address: -1, phone: -1 };
-    header.forEach((h, i) => {
-      const l = normalize(h);
-      if (map.guide < 0 && ['guia','guide','num guia','numero de guia','guia de envio','tracking'].includes(l)) map.guide = i;
-      else if (map.client < 0 && ['cliente','client','nombre','name','destinatario','nombre destinatario','nombre cliente'].includes(l)) map.client = i;
-      else if (map.address < 0 && ['direccion','address','dir','direccion de entrega','direccion destino'].includes(l)) map.address = i;
-      else if (map.phone < 0 && ['telefono','phone','tel','celular','movil','contacto'].includes(l)) map.phone = i;
-    });
+    var map = { guide: -1, client: -1, address: -1, phone: -1 };
+    for (var i = 0; i < header.length; i++) {
+      var l = normalize(header[i]);
+      if (map.guide < 0 && ['guia','guide','num guia','numero de guia','guia de envio','tracking'].indexOf(l) >= 0) map.guide = i;
+      else if (map.client < 0 && ['cliente','client','nombre','name','destinatario','nombre destinatario','nombre cliente'].indexOf(l) >= 0) map.client = i;
+      else if (map.address < 0 && ['direccion','address','dir','direccion de entrega','direccion destino'].indexOf(l) >= 0) map.address = i;
+      else if (map.phone < 0 && ['telefono','phone','tel','celular','movil','contacto'].indexOf(l) >= 0) map.phone = i;
+    }
     return map;
   }
 
   function rowsToItems(rows) {
     if (!rows.length) return [];
-    const header = rows[0];
-    const map = detectColumns(header);
-    const useHeader = map.guide >= 0 || map.address >= 0 || map.client >= 0;
+    var header = rows[0];
+    var map = detectColumns(header);
+    var useHeader = map.guide >= 0 || map.address >= 0 || map.client >= 0;
+    var dataRows = useHeader ? rows.slice(1) : rows;
+    var items = [];
 
-    const dataRows = useHeader ? rows.slice(1) : rows;
-    const items = [];
+    for (var i = 0; i < dataRows.length; i++) {
+      var row = dataRows[i];
+      var empty = true;
+      for (var k = 0; k < row.length; k++) {
+        if (row[k] && row[k].toString().trim()) { empty = false; break; }
+      }
+      if (empty) continue;
 
-    dataRows.forEach(row => {
-      if (!row || row.every(c => !c || !c.toString().trim())) return;
-
-      let guide, client, address, phone;
+      var guide, client, address, phone;
       if (useHeader) {
         guide = map.guide >= 0 ? (row[map.guide] || '').trim() : '';
         client = map.client >= 0 ? (row[map.client] || '').trim() : '';
@@ -988,105 +1111,121 @@
         address = (row[2] || '').trim();
         phone = (row[3] || '').trim();
       }
-
-      if (!guide && !address) return;
-      items.push({ guide, client, address, phone });
-    });
-
+      if (!guide && !address) continue;
+      items.push({ guide: guide, client: client, address: address, phone: phone });
+    }
     return items;
   }
 
   function addItemsToRoute(items) {
-    const maxOrder = state.route.reduce((max, p) => Math.max(max, p.order || 0), 0);
-    const now = Date.now();
-
-    items.forEach((item, i) => {
+    var maxOrder = 0;
+    for (var i = 0; i < state.route.length; i++) {
+      if ((state.route[i].order || 0) > maxOrder) maxOrder = state.route[i].order;
+    }
+    var now = Date.now();
+    for (var j = 0; j < items.length; j++) {
+      var item = items[j];
       state.route.push({
-        id: 'pkg-csv-' + now + '-' + i,
-        order: maxOrder + i + 1,
-        guide: item.guide || ('CSV-' + (now + i)),
+        id: 'pkg-csv-' + now + '-' + j,
+        order: maxOrder + j + 1,
+        guide: item.guide || ('CSV-' + (now + j)),
         client: item.client || 'Sin nombre',
         address: item.address || 'Sin dirección',
         phone: item.phone || '',
         status: 'pending',
         fromCSV: true
       });
-    });
-
+    }
     saveMessengerData();
     renderRoute();
   }
 
-  // ============================================================
-  // Photo input
-  // ============================================================
   function setupPhotoInput() {
-    const input = document.getElementById('photoInput');
-    const area = document.getElementById('photoArea');
-    const placeholder = document.getElementById('photoPlaceholder');
-    const preview = document.getElementById('photoPreview');
-    const retake = document.getElementById('retakeBtn');
+    var input = document.getElementById('photoInput');
+    var area = document.getElementById('photoArea');
+    var retake = document.getElementById('retakeBtn');
 
-    area.addEventListener('click', () => input.click());
-    retake.addEventListener('click', (e) => { e.stopPropagation(); input.click(); });
+    area.addEventListener('click', function () { input.click(); });
+    retake.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
 
-    input.addEventListener('change', async (e) => {
-      const file = e.target.files && e.target.files[0];
+    input.addEventListener('change', function (e) {
+      var file = e.target.files && e.target.files[0];
       if (!file) return;
       showToast('Procesando foto...', 1200);
-      try {
-        const compressed = await compressImage(file);
+      compressImage(file).then(function (compressed) {
         currentPhoto = compressed;
-        preview.src = compressed;
-        preview.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        retake.classList.remove('hidden');
+        currentNoPhoto = false;
+        document.getElementById('photoPreview').src = compressed;
+        updateEvidenceFormVisibility();
         showToast('Foto lista ✓', 1200);
-      } catch (err) {
+      }).catch(function () {
         showToast('No se pudo procesar la foto');
-      } finally {
+      }).finally(function () {
         input.value = '';
-      }
+      });
     });
   }
 
-  // ============================================================
-  // Event listeners
-  // ============================================================
   function setupEventListeners() {
-    // tabs
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab === 'ruta' ? 'viewRuta' : 'viewRegistro').classList.add('active');
-      });
+    var tabs = document.querySelectorAll('.tab');
+    for (var i = 0; i < tabs.length; i++) {
+      (function (tab) {
+        tab.addEventListener('click', function () {
+          var all = document.querySelectorAll('.tab');
+          for (var a = 0; a < all.length; a++) all[a].classList.remove('active');
+          var views = document.querySelectorAll('.view');
+          for (var b = 0; b < views.length; b++) views[b].classList.remove('active');
+          tab.classList.add('active');
+          var target = tab.getAttribute('data-tab') === 'ruta' ? 'viewRuta' : 'viewRegistro';
+          document.getElementById(target).classList.add('active');
+        });
+      })(tabs[i]);
+    }
+
+    document.getElementById('backBtn').addEventListener('click', closeDetail);
+    document.getElementById('btnEntregado').addEventListener('click', function () { saveDelivery('delivered'); });
+    document.getElementById('btnNovedad').addEventListener('click', function () { saveDelivery('issue'); });
+
+    document.getElementById('noPhotoBtn').addEventListener('click', function () {
+      if (currentPhoto) {
+        currentPhoto = null;
+        document.getElementById('photoPreview').src = '';
+      }
+      currentNoPhoto = !currentNoPhoto;
+      updateEvidenceFormVisibility();
     });
 
-    // evidence overlay
-    document.getElementById('backBtn').addEventListener('click', closeDetail);
-    document.getElementById('btnEntregado').addEventListener('click', () => saveDelivery('delivered'));
-    document.getElementById('btnNovedad').addEventListener('click', () => saveDelivery('issue'));
-
-    // event detail overlay
     document.getElementById('eventBackBtn').addEventListener('click', closeEventDetail);
 
-    // settings
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.getElementById('settingsBackBtn').addEventListener('click', closeSettings);
 
-    document.getElementById('changeMessengerBtn').addEventListener('click', () => {
+    document.getElementById('toggleRecipient').addEventListener('click', function () {
+      state.settings.requireRecipient = !state.settings.requireRecipient;
+      saveMessengerData();
+      updateTogglesUI();
+      showToast(state.settings.requireRecipient ? 'Ajuste activado: pedir nombre' : 'Ajuste desactivado: no pedir nombre', 1800);
+    });
+
+    document.getElementById('toggleNoPhoto').addEventListener('click', function () {
+      state.settings.allowNoPhoto = !state.settings.allowNoPhoto;
+      saveMessengerData();
+      updateTogglesUI();
+      showToast(state.settings.allowNoPhoto ? 'Ajuste activado: permitir sin foto' : 'Ajuste desactivado: foto obligatoria', 1800);
+    });
+
+    document.getElementById('changeMessengerBtn').addEventListener('click', function () {
       closeSettings();
       localStorage.removeItem(CURRENT_KEY);
       renderSplash();
       showSplash();
     });
 
-    document.getElementById('resetRouteBtn').addEventListener('click', () => {
-      if (!confirm(`¿Reiniciar los datos de ${state.messenger.name}? Se borran sus entregas y vuelve a la ruta demo inicial.`)) return;
+    document.getElementById('resetRouteBtn').addEventListener('click', function () {
+      if (!confirm('¿Reiniciar los datos de ' + state.messenger.name + '? Se borran sus entregas y vuelve a la ruta demo inicial.')) return;
       localStorage.removeItem(dataKey(state.messenger.code, 'route'));
       localStorage.removeItem(dataKey(state.messenger.code, 'events'));
+      localStorage.removeItem(dataKey(state.messenger.code, 'settings'));
       loadMessengerData(state.messenger.code);
       renderHeader();
       renderRoute();
@@ -1095,25 +1234,17 @@
       showToast('Ruta reiniciada');
     });
 
-    // CSV
-    const csvInput = document.getElementById('csvInput');
-    document.getElementById('csvSelectBtn').addEventListener('click', () => csvInput.click());
+    var csvInput = document.getElementById('csvInput');
+    document.getElementById('csvSelectBtn').addEventListener('click', function () { csvInput.click(); });
 
-    csvInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
+    csvInput.addEventListener('change', function (e) {
+      var file = e.target.files && e.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
+      var reader = new FileReader();
+      reader.onload = function () {
         try {
-          const text = reader.result;
-          const rows = parseCSV(text);
-          const items = rowsToItems(rows);
-
-          if (!items.length) {
-            showToast('⚠ No se encontraron filas válidas');
-            return;
-          }
-
+          var items = rowsToItems(parseCSV(reader.result));
+          if (!items.length) { showToast('⚠ No se encontraron filas válidas'); return; }
           pendingCSVItems = items;
           renderCSVPreview(items);
           document.getElementById('csvPreviewBox').classList.remove('hidden');
@@ -1126,54 +1257,65 @@
       reader.readAsText(file, 'UTF-8');
     });
 
-    document.getElementById('csvCancelBtn').addEventListener('click', () => {
+    document.getElementById('csvCancelBtn').addEventListener('click', function () {
       pendingCSVItems = null;
       document.getElementById('csvPreviewBox').classList.add('hidden');
     });
 
-    document.getElementById('csvConfirmBtn').addEventListener('click', () => {
+    document.getElementById('csvConfirmBtn').addEventListener('click', function () {
       if (!pendingCSVItems || !pendingCSVItems.length) return;
-      const count = pendingCSVItems.length;
+      var count = pendingCSVItems.length;
       addItemsToRoute(pendingCSVItems);
       pendingCSVItems = null;
       document.getElementById('csvPreviewBox').classList.add('hidden');
       closeSettings();
-      showToast(`✓ ${count} nueva${count > 1 ? 's' : ''} entrega${count > 1 ? 's' : ''} agregada${count > 1 ? 's' : ''}`);
+      showToast('✓ ' + count + ' nueva' + (count > 1 ? 's' : '') + ' entrega' + (count > 1 ? 's' : '') + ' agregada' + (count > 1 ? 's' : ''));
     });
   }
 
   function renderCSVPreview(items) {
-    const box = document.getElementById('csvPreview');
-    const shown = items.slice(0, 50);
-    box.innerHTML = `
-      <div style="font-weight:700;color:var(--ink);margin-bottom:6px;">${items.length} nueva${items.length > 1 ? 's' : ''} entrega${items.length > 1 ? 's' : ''}:</div>
-      ${shown.map((it, i) => `
-        <div class="csv-preview-item">
-          <div><span class="guide">${it.guide || '(sin guía)'}</span> · ${it.client || 'Sin cliente'}</div>
-          <div class="addr">${it.address || '(sin dirección)'}${it.phone ? ' · ' + it.phone : ''}</div>
-        </div>
-      `).join('')}
-      ${items.length > 50 ? `<div style="text-align:center;color:var(--muted);font-size:11px;padding-top:6px;">... y ${items.length - 50} más</div>` : ''}
-    `;
+    var box = document.getElementById('csvPreview');
+    var shown = items.slice(0, 50);
+    var html = '<div style="font-weight:700;color:var(--ink);margin-bottom:6px;">' + items.length + ' nueva' + (items.length > 1 ? 's' : '') + ' entrega' + (items.length > 1 ? 's' : '') + ':</div>';
+    for (var i = 0; i < shown.length; i++) {
+      var it = shown[i];
+      html += '<div class="csv-preview-item">' +
+        '<div><span class="guide">' + (it.guide || '(sin guía)') + '</span> · ' + (it.client || 'Sin cliente') + '</div>' +
+        '<div class="addr">' + (it.address || '(sin dirección)') + (it.phone ? ' · ' + it.phone : '') + '</div>' +
+      '</div>';
+    }
+    if (items.length > 50) {
+      html += '<div style="text-align:center;color:var(--muted);font-size:11px;padding-top:6px;">... y ' + (items.length - 50) + ' más</div>';
+    }
+    box.innerHTML = html;
   }
 
-  // ============================================================
-  // Init
-  // ============================================================
   function init() {
-    renderSplash();
-    setupPhotoInput();
-    setupEventListeners();
+    try {
+      renderSplash();
+      setupPhotoInput();
+      setupEventListeners();
 
-    const savedCode = localStorage.getItem(CURRENT_KEY);
-    if (savedCode && MESSENGERS[savedCode]) {
-      loadMessengerData(savedCode);
-      renderHeader();
-      renderRoute();
-      renderEvents();
-      hideSplash();
-    } else {
-      showSplash();
+      var savedCode = localStorage.getItem(CURRENT_KEY);
+      if (savedCode && MESSENGERS[savedCode]) {
+        loadMessengerData(savedCode);
+        renderHeader();
+        renderRoute();
+        renderEvents();
+        hideSplash();
+      } else {
+        showSplash();
+      }
+    } catch (e) {
+      console.error('Ruta X init error:', e);
+      var box = document.getElementById('messengerOptions');
+      if (box) {
+        box.innerHTML = '<div style="background:#7f1d1d;border:1px solid #ef4444;border-radius:12px;padding:16px;font-size:13px;line-height:1.5;">' +
+          '<strong>Error al iniciar Ruta X</strong><br>' +
+          e.message + '<br>' +
+          '<span style="opacity:0.7;font-size:11px;">Revisa la consola del navegador (F12) para más detalle.</span>' +
+        '</div>';
+      }
     }
   }
 
