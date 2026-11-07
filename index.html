@@ -551,7 +551,7 @@
         <button class="settings-btn danger" id="resetRouteBtn">Reiniciar mis datos</button>
       </div>
 
-      <div class="app-version">Ruta X · Demo local v0.7 · Sin conexión a servidor</div>
+      <div class="app-version">Ruta X · Demo local v0.8 · Sin conexión a servidor</div>
     </div>
   </div>
 </div>
@@ -615,19 +615,8 @@
 
   var MESSENGERS = {
     JPK: {
-      code: 'JPK', name: 'Julián Parra Klein', zone: 'Ruta Sur',
-      route: [
-        { id: 'jpk-1',  order: 1,  guide: 'CLL-2481', client: 'María Fernández',  address: 'Calle 5 # 34-120, San Fernando',     phone: '310 555 0101' },
-        { id: 'jpk-2',  order: 2,  guide: 'CLL-2482', client: 'Andrés Salcedo',   address: 'Carrera 100 # 11-45, Ciudad Jardín', phone: '315 555 0102' },
-        { id: 'jpk-3',  order: 3,  guide: 'CLL-2483', client: 'Luisa Ramírez',    address: 'Avenida 6N # 23-10, Granada',        phone: '320 555 0103' },
-        { id: 'jpk-4',  order: 4,  guide: 'CLL-2484', client: 'Jorge Valencia',   address: 'Calle 52 # 2B-30, Tequendama',       phone: '311 555 0104' },
-        { id: 'jpk-5',  order: 5,  guide: 'CLL-2485', client: 'Diana Mosquera',   address: 'Carrera 15 # 45-67, Versalles',      phone: '312 555 0105' },
-        { id: 'jpk-6',  order: 6,  guide: 'CLL-2486', client: 'Camilo Ortiz',     address: 'Calle 9 # 47-22, Santa Isabel',      phone: '318 555 0106' },
-        { id: 'jpk-7',  order: 7,  guide: 'CLL-2487', client: 'Paola Cárdenas',   address: 'Carrera 66 # 13-50, El Lido',        phone: '313 555 0107' },
-        { id: 'jpk-8',  order: 8,  guide: 'CLL-2488', client: 'Ricardo Peña',     address: 'Calle 23 # 4-15, Bretaña',           phone: '314 555 0108' },
-        { id: 'jpk-9',  order: 9,  guide: 'CLL-2489', client: 'Sandra Lucumí',    address: 'Avenida 3N # 47-80, Centenario',     phone: '316 555 0109' },
-        { id: 'jpk-10', order: 10, guide: 'CLL-2490', client: 'Felipe Muñoz',     address: 'Carrera 43A # 6-25, La Merced',      phone: '317 555 0110' }
-      ]
+      code: 'JPK', name: 'Julián Rodolfo Guevara', zone: 'Ruta Sur',
+      route: []
     },
     CMA: {
       code: 'CMA', name: 'Carlos Mendoza', zone: 'Ruta Norte',
@@ -676,8 +665,8 @@
     }
   };
 
-  var CURRENT_KEY = 'rutax_current_v7';
-  function dataKey(code, type) { return 'rutax_' + code + '_' + type + '_v7'; }
+  var CURRENT_KEY = 'rutax_current_v8';
+  function dataKey(code, type) { return 'rutax_' + code + '_' + type + '_v8'; }
   var DEFAULT_SETTINGS = { requireRecipient: false, allowNoPhoto: false, promptWhatsApp: true };
 
   var state = {
@@ -801,9 +790,6 @@
     return [];
   }
 
-  // ============================================================
-  // WhatsApp
-  // ============================================================
   function normalizePhone(phone) {
     if (!phone) return '';
     var p = String(phone).replace(/[^\d]/g, '');
@@ -850,11 +836,8 @@
     var phone = normalizePhone(evt.phone || '');
 
     if (!photos.length || !navigator.share) {
-      if (phone) {
-        sendWhatsAppDirect(evt);
-      } else {
-        showToast('No se puede compartir');
-      }
+      if (phone) sendWhatsAppDirect(evt);
+      else showToast('No se puede compartir');
       return;
     }
 
@@ -890,7 +873,6 @@
     var photoBtn = document.getElementById('waSharePhotoBtn');
     var subLabel = document.getElementById('waSheetSub');
 
-    // Determine primary action
     if (phone) {
       directBtn.classList.remove('hidden');
       directLabel.textContent = 'Enviar mensaje al cliente';
@@ -920,9 +902,6 @@
     pendingWhatsAppEvent = null;
   }
 
-  // ============================================================
-  // Splash
-  // ============================================================
   function renderSplash() {
     var box = document.getElementById('messengerOptions');
     var html = '';
@@ -1070,8 +1049,6 @@
       if (firstPhoto) {
         photoCell = '<img src="' + firstPhoto + '" alt="foto" />' +
           (photos.length > 1 ? '<span class="photo-count-badge">+' + (photos.length - 1) + '</span>' : '');
-      } else if (e.noPhoto) {
-        photoCell = '<div class="no-photo">Sin foto</div>';
       } else {
         photoCell = '<div class="no-photo">Sin foto</div>';
       }
@@ -1110,9 +1087,6 @@
     }
   }
 
-  // ============================================================
-  // Evidencia — multi-foto
-  // ============================================================
   function updateEvidenceFormUI() {
     var recipientWrap = document.getElementById('recipientFieldWrap');
     if (state.settings.requireRecipient) recipientWrap.classList.remove('hidden');
@@ -1163,7 +1137,6 @@
       posInd.classList.add('hidden');
     }
 
-    // Thumbs
     var thumbs = document.getElementById('photoThumbs');
     if (currentPhotos.length > 1) {
       thumbs.classList.remove('hidden');
@@ -1202,17 +1175,14 @@
       thumbs.innerHTML = '';
     }
 
-    // Add photo button (visible if photos exist)
     var addBtn = document.getElementById('addPhotoBtn');
     if (currentPhotos.length) {
       addBtn.classList.remove('hidden');
-      var txt = currentPhotos.length === 1 ? '➕ Agregar otra foto' : '➕ Agregar otra foto (' + currentPhotos.length + ' en total)';
-      addBtn.textContent = txt;
+      addBtn.textContent = '➕ Agregar otra foto' + (currentPhotos.length > 1 ? ' (' + currentPhotos.length + ' en total)' : '');
     } else {
       addBtn.classList.add('hidden');
     }
 
-    // Count label
     var countLbl = document.getElementById('photoCountLabel');
     if (currentPhotos.length) {
       countLbl.classList.remove('hidden');
@@ -1256,11 +1226,8 @@
 
     var btnEnt = document.getElementById('btnEntregado');
     btnEnt.textContent = isPickup ? '✓ Recogido' : '✓ Entregado';
-    if (isPickup) {
-      btnEnt.classList.add('pickup');
-    } else {
-      btnEnt.classList.remove('pickup');
-    }
+    if (isPickup) btnEnt.classList.add('pickup');
+    else btnEnt.classList.remove('pickup');
 
     document.getElementById('recipientInput').value = '';
     document.getElementById('noteInput').value = '';
@@ -1383,20 +1350,14 @@
     }
   }
 
-  // ============================================================
-  // Detalle de evento — carrusel
-  // ============================================================
   var eventCarouselState = { evt: null, index: 0, photos: [] };
 
   function openEventDetail(evt) {
     document.getElementById('eventDetailGuide').textContent = 'Guía ' + (evt.guide || '—');
-
     var photos = getEventPhotos(evt);
     eventCarouselState = { evt: evt, index: 0, photos: photos };
-
     renderEventCarousel();
     renderEventDetailBody(evt);
-
     document.getElementById('eventOverlay').classList.add('active');
   }
 
@@ -1567,9 +1528,6 @@
     document.getElementById('eventOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // Agregar manualmente
-  // ============================================================
   function openAddPackage() {
     document.getElementById('addClient').value = '';
     document.getElementById('addAddress').value = '';
@@ -1591,11 +1549,8 @@
     var btnP = document.getElementById('typePickup');
     btnD.classList.remove('active', 'pickup-active');
     btnP.classList.remove('active', 'pickup-active');
-    if (type === 'pickup') {
-      btnP.classList.add('active', 'pickup-active');
-    } else {
-      btnD.classList.add('active');
-    }
+    if (type === 'pickup') btnP.classList.add('active', 'pickup-active');
+    else btnD.classList.add('active');
   }
 
   function confirmAddPackage() {
@@ -1633,9 +1588,6 @@
     showToast('✓ Agregado a tu ruta');
   }
 
-  // ============================================================
-  // Búsqueda
-  // ============================================================
   function normalizeQuery(s) {
     return (s || '').toString().toLowerCase().trim()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -1814,9 +1766,6 @@
     document.getElementById('searchOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // Settings
-  // ============================================================
   function openSettings() {
     document.getElementById('settingsAccountText').textContent =
       'Estás como: ' + state.messenger.name + ' (' + state.messenger.code + ') · ' + state.messenger.zone;
@@ -1841,9 +1790,6 @@
     tw.setAttribute('aria-checked', state.settings.promptWhatsApp ? 'true' : 'false');
   }
 
-  // ============================================================
-  // CSV
-  // ============================================================
   function parseCSV(text) {
     var rows = [];
     var row = [];
@@ -1972,9 +1918,6 @@
     box.innerHTML = html;
   }
 
-  // ============================================================
-  // Setup
-  // ============================================================
   function setupPhotoInput() {
     var input = document.getElementById('photoInput');
     var area = document.getElementById('photoArea');
@@ -2139,7 +2082,6 @@
       searchInput.focus();
     });
 
-    // WhatsApp prompt
     document.getElementById('waSkipBtn').addEventListener('click', closeWhatsAppPrompt);
     document.getElementById('waDirectBtn').addEventListener('click', function () {
       var evt = pendingWhatsAppEvent;
@@ -2155,14 +2097,12 @@
       if (evt) shareWhatsAppWithPhotos(evt);
     });
 
-    // Add package
     document.getElementById('addManualFab').addEventListener('click', openAddPackage);
     document.getElementById('addCancelBtn').addEventListener('click', closeAddPackage);
     document.getElementById('addConfirmBtn').addEventListener('click', confirmAddPackage);
     document.getElementById('typeDelivery').addEventListener('click', function () { setAddFormType('delivery'); });
     document.getElementById('typePickup').addEventListener('click', function () { setAddFormType('pickup'); });
 
-    // Close modal on backdrop tap
     document.getElementById('addPackageOverlay').addEventListener('click', function (e) {
       if (e.target.id === 'addPackageOverlay') closeAddPackage();
     });
