@@ -150,20 +150,8 @@
   .no-photo-btn { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 12px; width: 100%; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s; font-family: inherit; }
   .no-photo-btn.active { background: #f0f9ff; border-color: #3b82f6; color: #1e40af; border-style: solid; }
 
-  /* ---------- Firma ---------- */
-  .signature-wrap {
-    position: relative;
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-    border: 1.5px solid #d1d5db;
-    border-radius: 14px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(15,23,42,0.05);
-  }
-  .signature-wrap.signed {
-    border-color: var(--green);
-    background: #f0fdf4;
-  }
+  .signature-wrap { position: relative; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border: 1.5px solid #d1d5db; border-radius: 14px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(15,23,42,0.05); }
+  .signature-wrap.signed { border-color: var(--green); background: #f0fdf4; }
   .signature-canvas { display: block; width: 100%; height: 180px; touch-action: none; cursor: crosshair; position: relative; z-index: 2; }
   .signature-hint { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; font-size: 14px; font-weight: 600; pointer-events: none; z-index: 1; transition: opacity 0.25s; gap: 4px; }
   .signature-hint .hint-icon { font-size: 28px; opacity: 0.6; }
@@ -182,7 +170,6 @@
   .color-chip.active { box-shadow: 0 0 0 2px white, 0 0 0 4px var(--ink); }
   .color-chip.active::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 900; font-size: 16px; color: rgba(0,0,0,0.55); text-shadow: 0 0 3px rgba(255,255,255,0.8); }
 
-  /* ---------- Processing overlay ---------- */
   .processing-overlay { position: fixed; inset: 0; background: rgba(10,31,68,0.72); z-index: 300; display: none; align-items: center; justify-content: center; }
   .processing-overlay.active { display: flex; }
   .processing-box { background: white; border-radius: 18px; padding: 28px 34px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); min-width: 220px; }
@@ -593,9 +580,9 @@
             <strong>Pedir firma al entregar</strong>
             <span>El cliente firma con el dedo y queda como marca de agua en las fotos</span>
           </div>
-          <button class="toggle-switch" id="toggleSignature" role="switch" aria-checked="false"></button>
+          <button class="toggle-switch on" id="toggleSignature" role="switch" aria-checked="true"></button>
         </div>
-        <div id="signatureColorWrap" class="hidden">
+        <div id="signatureColorWrap">
           <div style="margin-top: 16px; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: var(--ink);">Color de la firma</div>
           <div class="color-picker" id="colorPicker">
             <button class="color-chip" data-color="#a3e635" style="background: #a3e635;" title="Lima"></button>
@@ -634,7 +621,7 @@
         <button class="settings-btn danger" id="resetRouteBtn">Reiniciar mis datos</button>
       </div>
 
-      <div class="app-version">Ruta X · Demo local v0.9 · Sin conexión a servidor</div>
+      <div class="app-version">Ruta X · Demo local v0.10 · Sin conexión a servidor</div>
     </div>
   </div>
 </div>
@@ -755,9 +742,9 @@
     }
   };
 
-  var CURRENT_KEY = 'rutax_current_v9';
-  function dataKey(code, type) { return 'rutax_' + code + '_' + type + '_v9'; }
-  var DEFAULT_SETTINGS = { requireRecipient: false, allowNoPhoto: false, promptWhatsApp: true, requireSignature: false, signatureColor: '#a3e635' };
+  var CURRENT_KEY = 'rutax_current_v10';
+  function dataKey(code, type) { return 'rutax_' + code + '_' + type + '_v10'; }
+  var DEFAULT_SETTINGS = { requireRecipient: false, allowNoPhoto: false, promptWhatsApp: true, requireSignature: true, signatureColor: '#a3e635' };
 
   var state = {
     messenger: null,
@@ -778,7 +765,6 @@
   var searchDebounceTimer = null;
   var addFormType = 'delivery';
 
-  // Signature state
   var signatureCanvas = null;
   var signatureCtx = null;
   var signatureDpr = 1;
@@ -900,9 +886,6 @@
     return [];
   }
 
-  // ============================================================
-  // Signature
-  // ============================================================
   function getSignatureColorHex() {
     return state.settings.signatureColor || '#a3e635';
   }
@@ -915,7 +898,7 @@
     signatureCanvas = canvas;
     signatureDpr = window.devicePixelRatio || 1;
     var rect = canvas.getBoundingClientRect();
-    if (rect.width === 0) return; // Not visible yet
+    if (rect.width === 0) return;
 
     signatureLogicalW = rect.width;
     signatureLogicalH = rect.height;
@@ -940,10 +923,7 @@
 
   function getCanvasPos(e) {
     var rect = signatureCanvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
   function onSigStart(e) {
@@ -993,9 +973,7 @@
   function findPreviousSignature(clientName) {
     for (var i = state.events.length - 1; i >= 0; i--) {
       var e = state.events[i];
-      if (e.client === clientName && e.signature) {
-        return e.signature;
-      }
+      if (e.client === clientName && e.signature) return e.signature;
     }
     return null;
   }
@@ -1012,12 +990,9 @@
     if (!currentPackage) return;
     var prev = findPreviousSignature(currentPackage.client);
     if (!prev) return;
-
     clearSignature();
-
     var img = new Image();
     img.onload = function () {
-      // Recolor to current color via off-screen canvas
       var tempCanvas = document.createElement('canvas');
       tempCanvas.width = img.width;
       tempCanvas.height = img.height;
@@ -1027,7 +1002,6 @@
       tempCtx.fillStyle = getSignatureColorHex();
       tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-      // Fit into main canvas
       var aspect = tempCanvas.width / tempCanvas.height;
       var drawW = signatureLogicalW * 0.85;
       var drawH = drawW / aspect;
@@ -1047,9 +1021,6 @@
     img.src = prev;
   }
 
-  // ============================================================
-  // Watermark
-  // ============================================================
   function truncateText(ctx, text, maxWidth) {
     if (ctx.measureText(text).width <= maxWidth) return text;
     var t = text;
@@ -1069,15 +1040,11 @@
         canvas.width = W;
         canvas.height = H;
         var ctx = canvas.getContext('2d');
-
-        // Draw the photo
         ctx.drawImage(img, 0, 0, W, H);
 
-        // Band dimensions
-        var bandHeight = Math.max(80, Math.min(120, Math.round(H * 0.17)));
+        var bandHeight = Math.max(90, Math.min(140, Math.round(H * 0.19)));
         var bandY = H - bandHeight;
 
-        // Gradient band
         var grad = ctx.createLinearGradient(0, bandY, 0, H);
         grad.addColorStop(0, 'rgba(10, 31, 68, 0.60)');
         grad.addColorStop(0.5, 'rgba(10, 31, 68, 0.85)');
@@ -1085,21 +1052,20 @@
         ctx.fillStyle = grad;
         ctx.fillRect(0, bandY, W, bandHeight);
 
-        // Thin accent line
         ctx.fillStyle = '#FF6B35';
         ctx.fillRect(0, bandY, W, Math.max(2, Math.round(H * 0.004)));
 
-        var sigTargetW = Math.round(W * 0.22);
-        var sigTargetH = Math.round(bandHeight * 0.72);
+        // Firma al 28% del ancho
+        var sigTargetW = Math.round(W * 0.28);
+        var sigTargetH = Math.round(bandHeight * 0.74);
         var sigX = Math.round(W * 0.03);
         var sigY = bandY + Math.round((bandHeight - sigTargetH) / 2);
 
         var drawTextAndFinish = function () {
           var textX = sigX + sigTargetW + Math.round(W * 0.03);
-          var textMaxW = W - textX - Math.round(W * 0.17);
+          var textMaxW = W - textX - Math.round(W * 0.15);
           var fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
 
-          // Recipient line
           var recipientSize = Math.max(14, Math.round(W * 0.030));
           ctx.font = '700 ' + recipientSize + 'px ' + fontFamily;
           ctx.fillStyle = '#ffffff';
@@ -1107,28 +1073,23 @@
           ctx.textBaseline = 'middle';
           var recipientText = 'Recibido por: ' + (recipientName || 'Cliente');
           recipientText = truncateText(ctx, recipientText, textMaxW);
-          var recipientY = bandY + bandHeight * 0.42;
+          var recipientY = bandY + bandHeight * 0.40;
           ctx.fillText(recipientText, textX, recipientY);
 
-          // Date line
           var dateSize = Math.max(11, Math.round(W * 0.022));
           ctx.font = '500 ' + dateSize + 'px ' + fontFamily;
           ctx.fillStyle = 'rgba(255,255,255,0.78)';
-          var dateText = formatShortDateTime(timestamp);
-          ctx.fillText(dateText, textX, bandY + bandHeight * 0.74);
+          ctx.fillText(formatShortDateTime(timestamp), textX, bandY + bandHeight * 0.72);
 
-          // Logo "Ruta X" right-aligned
           var logoSize = Math.max(12, Math.round(W * 0.022));
           var logoY = bandY + bandHeight * 0.55;
           var rightPad = Math.round(W * 0.03);
 
           ctx.textAlign = 'right';
           ctx.textBaseline = 'middle';
-          // Draw "X" (accent)
           ctx.font = '800 ' + Math.round(logoSize * 1.15) + 'px ' + fontFamily;
           ctx.fillStyle = '#FF6B35';
           ctx.fillText('X', W - rightPad, logoY);
-          // Draw "Ruta" (white) to the left of X
           var xWidth = ctx.measureText('X').width;
           ctx.font = '600 ' + logoSize + 'px ' + fontFamily;
           ctx.fillStyle = 'rgba(255,255,255,0.85)';
@@ -1137,7 +1098,6 @@
           resolve(canvas.toDataURL('image/jpeg', 0.75));
         };
 
-        // Draw signature if available
         if (signatureDataURL) {
           var sigImg = new Image();
           sigImg.onload = function () {
@@ -1159,9 +1119,7 @@
           drawTextAndFinish();
         }
       };
-      img.onerror = function () {
-        resolve(photoDataURL); // Fallback: return original
-      };
+      img.onerror = function () { resolve(photoDataURL); };
       img.src = photoDataURL;
     });
   }
@@ -1174,9 +1132,6 @@
     document.getElementById('processingOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // WhatsApp
-  // ============================================================
   function normalizePhone(phone) {
     if (!phone) return '';
     var p = String(phone).replace(/[^\d]/g, '');
@@ -1218,13 +1173,11 @@
     var photos = getEventPhotos(evt);
     var msg = buildWhatsAppMessage(evt);
     var phone = normalizePhone(evt.phone || '');
-
     if (!photos.length || !navigator.share) {
       if (phone) sendWhatsAppDirect(evt);
       else showToast('No se puede compartir');
       return;
     }
-
     var tryShare = function () {
       var files = [];
       for (var i = 0; i < photos.length && i < 5; i++) {
@@ -1237,7 +1190,6 @@
       if (navigator.canShare && !navigator.canShare({ files: files })) return Promise.reject();
       return navigator.share({ files: files, text: msg, title: 'Confirmación de entrega firmada' });
     };
-
     tryShare().catch(function (e) {
       if (e && e.name === 'AbortError') return;
       if (phone) sendWhatsAppDirect(evt);
@@ -1248,25 +1200,17 @@
     pendingWhatsAppEvent = evt;
     var photos = getEventPhotos(evt);
     var phone = normalizePhone(evt.phone || '');
-
     document.getElementById('waClientName').textContent = evt.client || 'el cliente';
     document.getElementById('waClientPhone').textContent = phone ? '📱 +' + phone : '(sin teléfono registrado)';
-
     var directBtn = document.getElementById('waDirectBtn');
     var directLabel = document.getElementById('waDirectBtnLabel');
     var photoBtn = document.getElementById('waSharePhotoBtn');
     var subLabel = document.getElementById('waSheetSub');
-
     if (phone) {
       directBtn.classList.remove('hidden');
       directLabel.textContent = 'Enviar mensaje al cliente';
-      if (photos.length) {
-        photoBtn.classList.remove('hidden');
-        subLabel.textContent = 'Elige cómo avisar al cliente';
-      } else {
-        photoBtn.classList.add('hidden');
-        subLabel.textContent = 'Enviar mensaje directo al cliente';
-      }
+      if (photos.length) { photoBtn.classList.remove('hidden'); subLabel.textContent = 'Elige cómo avisar al cliente'; }
+      else { photoBtn.classList.add('hidden'); subLabel.textContent = 'Enviar mensaje directo al cliente'; }
     } else if (photos.length) {
       directBtn.classList.remove('hidden');
       directLabel.textContent = 'Compartir con foto';
@@ -1277,7 +1221,6 @@
       photoBtn.classList.add('hidden');
       subLabel.textContent = 'Sin teléfono ni foto: no se puede avisar';
     }
-
     document.getElementById('whatsappOverlay').classList.add('active');
   }
 
@@ -1286,9 +1229,6 @@
     pendingWhatsAppEvent = null;
   }
 
-  // ============================================================
-  // Splash
-  // ============================================================
   function renderSplash() {
     var box = document.getElementById('messengerOptions');
     var html = '';
@@ -1305,7 +1245,6 @@
       '</button>';
     }
     box.innerHTML = html;
-
     var btns = box.querySelectorAll('.messenger-option');
     for (var j = 0; j < btns.length; j++) {
       (function (btn) {
@@ -1313,9 +1252,7 @@
           var code = btn.getAttribute('data-code');
           localStorage.setItem(CURRENT_KEY, code);
           loadMessengerData(code);
-          renderHeader();
-          renderRoute();
-          renderEvents();
+          renderHeader(); renderRoute(); renderEvents();
           hideSplash();
           showToast('Bienvenido, ' + MESSENGERS[code].name.split(' ')[0]);
         });
@@ -1346,26 +1283,15 @@
   function renderRoute() {
     var list = document.getElementById('routeList');
     var visible = state.route.filter(function (p) { return p.status !== 'delivered'; });
-
     if (!state.route.length) {
-      list.innerHTML = '<div class="empty">' +
-        '<div class="empty-icon">📦</div>' +
-        '<div class="empty-title">No hay paquetes en la ruta</div>' +
-        '<div>Toca el botón ➕ para agregar uno manualmente.</div>' +
-      '</div>';
+      list.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><div class="empty-title">No hay paquetes en la ruta</div><div>Toca el botón ➕ para agregar uno manualmente.</div></div>';
     } else if (!visible.length) {
-      list.innerHTML = '<div class="empty celebrate">' +
-        '<div class="empty-icon">🎉</div>' +
-        '<div class="empty-title">¡Todo entregado!</div>' +
-        '<div>Revisa la pestaña Registro para ver el historial completo.</div>' +
-      '</div>';
+      list.innerHTML = '<div class="empty celebrate"><div class="empty-icon">🎉</div><div class="empty-title">¡Todo entregado!</div><div>Revisa la pestaña Registro para ver el historial completo.</div></div>';
     } else {
       var html = '';
       for (var i = 0; i < visible.length; i++) {
         var p = visible[i];
-        var issues = state.events.filter(function (e) {
-          return e.packageId === p.id && e.status === 'issue';
-        }).length;
+        var issues = state.events.filter(function (e) { return e.packageId === p.id && e.status === 'issue'; }).length;
         var isPickup = p.type === 'pickup';
         var label = p.status === 'issue' ? 'Novedad' : (isPickup ? 'Recogida' : 'Pendiente');
         var icon = p.status === 'issue' ? '⚠' : (isPickup ? '📤' : '○');
@@ -1388,7 +1314,6 @@
         '</div>';
       }
       list.innerHTML = html;
-
       var cards = list.querySelectorAll('.package-card');
       for (var k = 0; k < cards.length; k++) {
         (function (card) {
@@ -1403,7 +1328,6 @@
         })(cards[k]);
       }
     }
-
     var total = state.route.length || 1;
     var done = state.route.filter(function (p) { return p.status === 'delivered'; }).length;
     document.getElementById('progressText').textContent = done + ' de ' + state.route.length + ' entregados';
@@ -1413,20 +1337,11 @@
   function renderEvents() {
     var box = document.getElementById('eventsTable');
     if (!state.events.length) {
-      box.innerHTML = '<div class="empty">' +
-        '<div class="empty-icon">📋</div>' +
-        '<div class="empty-title">Aún no hay registros</div>' +
-        '<div>Comienza a entregar paquetes para ver aquí tu historial.</div>' +
-      '</div>';
+      box.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">Aún no hay registros</div><div>Comienza a entregar paquetes para ver aquí tu historial.</div></div>';
       return;
     }
     var sorted = state.events.slice().sort(function (a, b) { return b.timestamp - a.timestamp; });
-
-    var html = '<div class="events-header">' +
-      '<h3>Registro de entregas</h3>' +
-      '<span class="events-count">' + state.events.length + ' evento' + (state.events.length > 1 ? 's' : '') + '</span>' +
-    '</div>';
-
+    var html = '<div class="events-header"><h3>Registro de entregas</h3><span class="events-count">' + state.events.length + ' evento' + (state.events.length > 1 ? 's' : '') + '</span></div>';
     for (var i = 0; i < sorted.length; i++) {
       var e = sorted[i];
       var photos = getEventPhotos(e);
@@ -1435,32 +1350,22 @@
       var photoCell;
       var sigBadge = e.signature ? '<span class="sig-badge">✍️</span>' : '';
       if (firstPhoto) {
-        photoCell = '<img src="' + firstPhoto + '" alt="foto" />' +
-          (photos.length > 1 ? '<span class="photo-count-badge">+' + (photos.length - 1) + '</span>' : '') +
-          sigBadge;
+        photoCell = '<img src="' + firstPhoto + '" alt="foto" />' + (photos.length > 1 ? '<span class="photo-count-badge">+' + (photos.length - 1) + '</span>' : '') + sigBadge;
       } else {
         photoCell = '<div class="no-photo">Sin foto</div>' + sigBadge;
       }
-
       html += '<div class="event-card" data-id="' + e.id + '">' +
         '<div class="event-photo">' + photoCell + '</div>' +
         '<div class="event-info">' +
-          '<div class="event-top">' +
-            '<span class="event-guide">' + e.guide + '</span>' +
-            '<span class="status-badge ' + e.status + '">' + statusText + '</span>' +
-          '</div>' +
+          '<div class="event-top"><span class="event-guide">' + e.guide + '</span><span class="status-badge ' + e.status + '">' + statusText + '</span></div>' +
           '<div class="event-address">' + e.address + '</div>' +
           (e.recipient ? '<div class="event-note">Recibió: ' + e.recipient + '</div>' : '') +
           (e.note ? '<div class="event-note">"' + e.note + '"</div>' : '') +
-          '<div class="event-meta">' +
-            '<span>🕒 ' + formatTime(e.timestamp) + '</span>' +
-            (photos.length > 1 ? '<span>📷 ' + photos.length + ' fotos</span>' : '') +
-          '</div>' +
+          '<div class="event-meta"><span>🕒 ' + formatTime(e.timestamp) + '</span>' + (photos.length > 1 ? '<span>📷 ' + photos.length + ' fotos</span>' : '') + '</div>' +
         '</div>' +
       '</div>';
     }
     box.innerHTML = html;
-
     var cards = box.querySelectorAll('.event-card');
     for (var j = 0; j < cards.length; j++) {
       (function (card) {
@@ -1481,7 +1386,6 @@
     if (state.settings.requireRecipient) recipientWrap.classList.remove('hidden');
     else recipientWrap.classList.add('hidden');
 
-    // Signature section
     var sigSection = document.getElementById('signatureSection');
     if (state.settings.requireSignature) sigSection.classList.remove('hidden');
     else sigSection.classList.add('hidden');
@@ -1542,14 +1446,12 @@
         '</div>';
       }
       thumbs.innerHTML = thtml;
-
       var ths = thumbs.querySelectorAll('.photo-thumb');
       for (var t = 0; t < ths.length; t++) {
         (function (th) {
           th.addEventListener('click', function (evt) {
             if (evt.target.classList.contains('photo-thumb-remove')) return;
-            var idx = parseInt(th.getAttribute('data-i'), 10);
-            currentPhotoIndex = idx;
+            currentPhotoIndex = parseInt(th.getAttribute('data-i'), 10);
             updateEvidenceFormUI();
           });
         })(ths[t]);
@@ -1559,8 +1461,7 @@
         (function (rm) {
           rm.addEventListener('click', function (evt) {
             evt.stopPropagation();
-            var idx = parseInt(rm.getAttribute('data-remove'), 10);
-            removePhotoAt(idx);
+            removePhotoAt(parseInt(rm.getAttribute('data-remove'), 10));
           });
         })(removes[r]);
       }
@@ -1596,9 +1497,7 @@
   function removePhotoAt(idx) {
     if (idx < 0 || idx >= currentPhotos.length) return;
     currentPhotos.splice(idx, 1);
-    if (currentPhotoIndex >= currentPhotos.length) {
-      currentPhotoIndex = Math.max(0, currentPhotos.length - 1);
-    }
+    if (currentPhotoIndex >= currentPhotos.length) currentPhotoIndex = Math.max(0, currentPhotos.length - 1);
     if (!currentPhotos.length) currentPhotoIndex = 0;
     updateEvidenceFormUI();
     showToast('Foto eliminada', 1400);
@@ -1630,7 +1529,6 @@
     updateEvidenceFormUI();
     document.getElementById('detailOverlay').classList.add('active');
 
-    // Setup signature canvas AFTER overlay is visible
     if (state.settings.requireSignature) {
       setTimeout(function () {
         setupSignatureCanvas();
@@ -1658,7 +1556,6 @@
     var gpsBox = document.getElementById('gpsBox');
     var gpsText = document.getElementById('gpsText');
     gpsBox.classList.remove('ok', 'error');
-
     if (!navigator.geolocation) {
       gpsText.textContent = 'GPS no disponible en este dispositivo';
       gpsBox.classList.add('error');
@@ -1666,14 +1563,9 @@
     }
     gpsText.textContent = 'Buscando ubicación...';
     if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
-
     gpsWatchId = navigator.geolocation.watchPosition(
       function (pos) {
-        currentGPS = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          accuracy: Math.round(pos.coords.accuracy)
-        };
+        currentGPS = { lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: Math.round(pos.coords.accuracy) };
         gpsText.innerHTML = '<strong>' + currentGPS.lat.toFixed(5) + ', ' + currentGPS.lng.toFixed(5) + '</strong><br><small>Precisión: ±' + currentGPS.accuracy + ' m</small>';
         gpsBox.classList.add('ok');
         gpsBox.classList.remove('error');
@@ -1712,26 +1604,23 @@
 
     var needSignature = status === 'delivered' && state.settings.requireSignature && hasSignatureStrokes;
 
-    // Get signature PNG if needed
     var signatureData = null;
     if (needSignature) {
-      try {
-        signatureData = signatureCanvas.toDataURL('image/png');
-      } catch (e) {
-        showToast('No se pudo capturar la firma');
-        return;
-      }
+      try { signatureData = signatureCanvas.toDataURL('image/png'); }
+      catch (e) { showToast('No se pudo capturar la firma'); return; }
     }
 
-    // If we need watermarks, show loading and process
     if (needSignature && currentPhotos.length > 0) {
       showProcessing('Aplicando firma a ' + currentPhotos.length + ' foto' + (currentPhotos.length > 1 ? 's' : '') + '...');
       var color = getSignatureColorHex();
       var watermarked = [];
       var ts = Date.now();
-
       var processNext = function (i) {
         if (i >= currentPhotos.length) {
+          finalizeEvent._status = status;
+          finalizeEvent._recipient = recipient;
+          finalizeEvent._note = note;
+          finalizeEvent._isPickup = isPickup;
           finalizeEvent(watermarked, signatureData, color);
           return;
         }
@@ -1745,18 +1634,15 @@
       };
       processNext(0);
     } else {
+      finalizeEvent._status = status;
+      finalizeEvent._recipient = recipient;
+      finalizeEvent._note = note;
+      finalizeEvent._isPickup = isPickup;
       finalizeEvent(currentPhotos.slice(), signatureData, needSignature ? getSignatureColorHex() : null);
     }
   }
 
   function finalizeEvent(photos, signatureData, color) {
-    var status = (function () {
-      // We need to know if it was delivered or issue
-      // Passed through closure is bad, let me use a state var
-      return window._pendingStatus || 'delivered';
-    })();
-
-    // This function is called asynchronously; use the pending status
     var pendingStatus = finalizeEvent._status || 'delivered';
     var recipient = finalizeEvent._recipient || '';
     var note = finalizeEvent._note || '';
@@ -1806,9 +1692,6 @@
     }
   }
 
-  // ============================================================
-  // Detail de evento
-  // ============================================================
   var eventCarouselState = { evt: null, index: 0, photos: [] };
 
   function openEventDetail(evt) {
@@ -1825,22 +1708,16 @@
     var photos = eventCarouselState.photos;
     var idx = eventCarouselState.index;
     var evt = eventCarouselState.evt;
-
     if (!photos.length) {
       var emptyText = evt.noPhoto ? 'Entrega marcada sin foto' : 'Sin fotografía de evidencia';
       wrap.innerHTML = '<div class="carousel-main"><div class="empty-photo">' + emptyText + '</div></div>';
       return;
     }
-
-    var html = '<div class="carousel-main">' +
-      '<img src="' + photos[idx] + '" alt="Evidencia ' + (idx + 1) + '" />';
+    var html = '<div class="carousel-main"><img src="' + photos[idx] + '" alt="Evidencia ' + (idx + 1) + '" />';
     if (photos.length > 1) {
-      html += '<button class="car-nav prev" id="carPrevBtn">‹</button>' +
-        '<button class="car-nav next" id="carNextBtn">›</button>' +
-        '<div class="car-counter">' + (idx + 1) + ' / ' + photos.length + '</div>';
+      html += '<button class="car-nav prev" id="carPrevBtn">‹</button><button class="car-nav next" id="carNextBtn">›</button><div class="car-counter">' + (idx + 1) + ' / ' + photos.length + '</div>';
     }
     html += '</div>';
-
     if (photos.length > 1) {
       html += '<div class="carousel-thumbs" id="carThumbs">';
       for (var i = 0; i < photos.length; i++) {
@@ -1848,9 +1725,7 @@
       }
       html += '</div>';
     }
-
     wrap.innerHTML = html;
-
     if (photos.length > 1) {
       document.getElementById('carPrevBtn').addEventListener('click', function () {
         eventCarouselState.index = (eventCarouselState.index - 1 + photos.length) % photos.length;
@@ -1877,78 +1752,38 @@
     var statusLabel = evt.status === 'delivered' ? '✓ Entregado' : '⚠ Novedad';
     var statusClass = evt.status === 'delivered' ? 'delivered' : 'issue';
     if (evt.type === 'pickup' && evt.status === 'delivered') statusLabel = '✓ Recogido';
-
     var phone = normalizePhone(evt.phone || '');
     var hasPhone = phone.length > 0;
 
     var html = '';
-    html += '<div class="ev-status-row">' +
-      '<span class="status-badge ' + statusClass + '">' + statusLabel + '</span>' +
-      '<span class="ev-time">' + formatTime(evt.timestamp) + '</span>' +
-    '</div>';
-
+    html += '<div class="ev-status-row"><span class="status-badge ' + statusClass + '">' + statusLabel + '</span><span class="ev-time">' + formatTime(evt.timestamp) + '</span></div>';
     html += '<div class="ev-block"><div class="ev-label">Cliente</div><div class="ev-value">' + (evt.client || '—') + '</div></div>';
-
-    if (evt.phone) {
-      html += '<div class="ev-block"><div class="ev-label">Teléfono</div><div class="ev-value">' + evt.phone + '</div></div>';
-    }
-
+    if (evt.phone) html += '<div class="ev-block"><div class="ev-label">Teléfono</div><div class="ev-value">' + evt.phone + '</div></div>';
     html += '<div class="ev-block"><div class="ev-label">Dirección</div><div class="ev-value">' + (evt.address || '—') + '</div></div>';
-
-    if (evt.recipient) {
-      html += '<div class="ev-block"><div class="ev-label">Recibido por</div><div class="ev-value">' + evt.recipient + '</div></div>';
-    }
-
-    if (evt.note) {
-      html += '<div class="ev-block note"><div class="ev-label">Nota del mensajero</div><div class="ev-value">"' + evt.note + '"</div></div>';
-    }
-
+    if (evt.recipient) html += '<div class="ev-block"><div class="ev-label">Recibido por</div><div class="ev-value">' + evt.recipient + '</div></div>';
+    if (evt.note) html += '<div class="ev-block note"><div class="ev-label">Nota del mensajero</div><div class="ev-value">"' + evt.note + '"</div></div>';
     html += '<div class="ev-grid">' +
       '<div class="ev-block"><div class="ev-label">Fecha y hora</div><div class="ev-value" style="font-size:13px;">' + formatFullDate(evt.timestamp) + '</div></div>' +
-      '<div class="ev-block"><div class="ev-label">Mensajero</div><div class="ev-value" style="font-size:13px;">' + (evt.messengerName || state.messenger.name) +
-        '<br><span style="color:var(--muted);font-weight:500;font-size:11px;">' + (evt.messengerCode || state.messenger.code) + '</span></div></div>' +
+      '<div class="ev-block"><div class="ev-label">Mensajero</div><div class="ev-value" style="font-size:13px;">' + (evt.messengerName || state.messenger.name) + '<br><span style="color:var(--muted);font-weight:500;font-size:11px;">' + (evt.messengerCode || state.messenger.code) + '</span></div></div>' +
     '</div>';
-
-    if (photos.length > 1) {
-      html += '<div class="ev-block"><div class="ev-label">Evidencias</div><div class="ev-value">' + photos.length + ' fotografías adjuntas</div></div>';
-    }
-
-    if (evt.signature) {
-      html += '<div class="ev-signature-img">' +
-        '<div class="ev-label">Firma del cliente</div>' +
-        '<img src="' + evt.signature + '" alt="Firma" />' +
-      '</div>';
-    }
-
+    if (photos.length > 1) html += '<div class="ev-block"><div class="ev-label">Evidencias</div><div class="ev-value">' + photos.length + ' fotografías adjuntas</div></div>';
+    if (evt.signature) html += '<div class="ev-signature-img"><div class="ev-label">Firma del cliente</div><img src="' + evt.signature + '" alt="Firma" /></div>';
     if (evt.gps) {
-      html += '<div class="ev-block"><div class="ev-label">Ubicación GPS</div><div class="ev-value" style="font-size:13px;">' +
-        evt.gps.lat.toFixed(5) + ', ' + evt.gps.lng.toFixed(5) +
-        (evt.gps.accuracy ? '<br><span style="color:var(--muted);font-weight:500;font-size:11px;">Precisión ±' + evt.gps.accuracy + ' m</span>' : '') +
-      '</div></div>';
+      html += '<div class="ev-block"><div class="ev-label">Ubicación GPS</div><div class="ev-value" style="font-size:13px;">' + evt.gps.lat.toFixed(5) + ', ' + evt.gps.lng.toFixed(5) + (evt.gps.accuracy ? '<br><span style="color:var(--muted);font-weight:500;font-size:11px;">Precisión ±' + evt.gps.accuracy + ' m</span>' : '') + '</div></div>';
     }
-
-    if (evt.status === 'delivered') {
-      html += '<div class="wa-actions-wrap" id="evtWaActions"></div>';
-    }
-
+    if (evt.status === 'delivered') html += '<div class="wa-actions-wrap" id="evtWaActions"></div>';
     document.getElementById('eventDetailBody').innerHTML = html;
 
     if (evt.status === 'delivered') {
       var actions = document.getElementById('evtWaActions');
       var btnHtml = '';
       if (hasPhone) {
-        btnHtml += '<button class="wa-share-btn" data-action="direct">' +
-          '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>' +
-          'Enviar mensaje al cliente' +
-        '</button>';
+        btnHtml += '<button class="wa-share-btn" data-action="direct"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>Enviar mensaje al cliente</button>';
       }
       if (photos.length) {
-        btnHtml += '<button class="wa-share-btn' + (hasPhone ? ' secondary' : '') + '" data-action="photo">' +
-          '📷 Compartir ' + (photos.length > 1 ? photos.length + ' fotos' : 'con foto') +
-        '</button>';
+        btnHtml += '<button class="wa-share-btn' + (hasPhone ? ' secondary' : '') + '" data-action="photo">📷 Compartir ' + (photos.length > 1 ? photos.length + ' fotos' : 'con foto') + '</button>';
       }
       actions.innerHTML = btnHtml;
-
       var buttons = actions.querySelectorAll('button');
       for (var i = 0; i < buttons.length; i++) {
         (function (btn) {
@@ -1996,12 +1831,10 @@
     var note = document.getElementById('addNote').value.trim();
     if (!client) { showToast('⚠ Escribe el nombre del cliente'); return; }
     if (!address) { showToast('⚠ Escribe la dirección'); return; }
-
     var maxOrder = 0;
     for (var i = 0; i < state.route.length; i++) {
       if ((state.route[i].order || 0) > maxOrder) maxOrder = state.route[i].order;
     }
-
     state.route.push({
       id: 'pkg-manual-' + Date.now(),
       order: maxOrder + 1,
@@ -2014,16 +1847,12 @@
       status: 'pending',
       fromManual: true
     });
-
     saveMessengerData();
     renderRoute();
     closeAddPackage();
     showToast('✓ Agregado a tu ruta');
   }
 
-  // ============================================================
-  // Búsqueda
-  // ============================================================
   function normalizeQuery(s) {
     return (s || '').toString().toLowerCase().trim()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -2033,10 +1862,7 @@
     var months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
     var monthsShort = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
     var days = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
-    var day = d.getDate();
-    var mm = d.getMonth();
-    var yyyy = d.getFullYear();
-    return [day, mm + 1, yyyy, months[mm], monthsShort[mm], days[d.getDay()]].join(' ');
+    return [d.getDate(), d.getMonth() + 1, d.getFullYear(), months[d.getMonth()], monthsShort[d.getMonth()], days[d.getDay()]].join(' ');
   }
   function matchesAll(haystack, query) {
     var terms = query.split(/\s+/).filter(Boolean);
@@ -2104,11 +1930,7 @@
     var isPickup = p.type === 'pickup';
     return '<div class="sr-card" data-type="pending" data-id="' + p.id + '">' +
       '<div class="sr-photo">' + (isPickup ? '📤' : '📦') + '</div>' +
-      '<div class="sr-body">' +
-        '<div class="sr-top"><span class="sr-guide">' + (p.guide || '—') + '</span><span class="status-badge pending">○ ' + (isPickup ? 'Recogida' : 'Pendiente') + '</span></div>' +
-        '<div class="sr-title">' + p.client + '</div>' +
-        '<div class="sr-sub">' + p.address + '</div>' +
-      '</div>' +
+      '<div class="sr-body"><div class="sr-top"><span class="sr-guide">' + (p.guide || '—') + '</span><span class="status-badge pending">○ ' + (isPickup ? 'Recogida' : 'Pendiente') + '</span></div><div class="sr-title">' + p.client + '</div><div class="sr-sub">' + p.address + '</div></div>' +
       '<div class="chevron">›</div>' +
     '</div>';
   }
@@ -2117,20 +1939,13 @@
     var photos = getEventPhotos(e);
     var statusText = e.status === 'delivered' ? (e.type === 'pickup' ? '✓ Recogido' : '✓ Entregado') : '⚠ Novedad';
     var photoCell;
-    if (photos.length) {
-      photoCell = '<img src="' + photos[0] + '" />' + (photos.length > 1 ? '<span class="photo-count-badge">+' + (photos.length - 1) + '</span>' : '');
-    } else if (e.noPhoto) photoCell = '🚫';
+    if (photos.length) photoCell = '<img src="' + photos[0] + '" />' + (photos.length > 1 ? '<span class="photo-count-badge">+' + (photos.length - 1) + '</span>' : '');
+    else if (e.noPhoto) photoCell = '🚫';
     else photoCell = '📋';
-    var sigIcon = e.signature ? ' · ✍️ firmado' : '';
+    var sigIcon = e.signature ? ' · ✍️' : '';
     return '<div class="sr-card" data-type="event" data-id="' + e.id + '">' +
       '<div class="sr-photo">' + photoCell + '</div>' +
-      '<div class="sr-body">' +
-        '<div class="sr-top"><span class="sr-guide">' + e.guide + '</span><span class="status-badge ' + e.status + '">' + statusText + '</span></div>' +
-        '<div class="sr-title">' + (e.client || '—') + '</div>' +
-        '<div class="sr-sub">' + (e.address || '') + '</div>' +
-        (e.recipient ? '<div class="sr-sub">Recibió: ' + e.recipient + '</div>' : '') +
-        '<div class="sr-date">🕒 ' + formatTime(e.timestamp) + (photos.length > 1 ? ' · 📷 ' + photos.length : '') + sigIcon + '</div>' +
-      '</div>' +
+      '<div class="sr-body"><div class="sr-top"><span class="sr-guide">' + e.guide + '</span><span class="status-badge ' + e.status + '">' + statusText + '</span></div><div class="sr-title">' + (e.client || '—') + '</div><div class="sr-sub">' + (e.address || '') + '</div>' + (e.recipient ? '<div class="sr-sub">Recibió: ' + e.recipient + '</div>' : '') + '<div class="sr-date">🕒 ' + formatTime(e.timestamp) + (photos.length > 1 ? ' · 📷 ' + photos.length : '') + sigIcon + '</div></div>' +
     '</div>';
   }
 
@@ -2172,12 +1987,8 @@
     document.getElementById('searchOverlay').classList.remove('active');
   }
 
-  // ============================================================
-  // Settings
-  // ============================================================
   function openSettings() {
-    document.getElementById('settingsAccountText').textContent =
-      'Estás como: ' + state.messenger.name + ' (' + state.messenger.code + ') · ' + state.messenger.zone;
+    document.getElementById('settingsAccountText').textContent = 'Estás como: ' + state.messenger.name + ' (' + state.messenger.code + ') · ' + state.messenger.zone;
     document.getElementById('csvPreviewBox').classList.add('hidden');
     pendingCSVItems = null;
     updateTogglesUI();
@@ -2200,11 +2011,9 @@
     tw.setAttribute('aria-checked', state.settings.promptWhatsApp ? 'true' : 'false');
     if (state.settings.requireSignature) ts.classList.add('on'); else ts.classList.remove('on');
     ts.setAttribute('aria-checked', state.settings.requireSignature ? 'true' : 'false');
-
     var colorWrap = document.getElementById('signatureColorWrap');
     if (state.settings.requireSignature) colorWrap.classList.remove('hidden');
     else colorWrap.classList.add('hidden');
-
     updateColorChips();
   }
 
@@ -2216,9 +2025,6 @@
     }
   }
 
-  // ============================================================
-  // CSV
-  // ============================================================
   function parseCSV(text) {
     var rows = [];
     var row = [];
@@ -2244,8 +2050,7 @@
     return rows;
   }
   function normalizeCSVHeader(s) {
-    return (s || '').toString().trim().toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return (s || '').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
   function detectColumns(header) {
     var map = { guide: -1, client: -1, address: -1, phone: -1, type: -1 };
@@ -2330,9 +2135,6 @@
     box.innerHTML = html;
   }
 
-  // ============================================================
-  // Setup
-  // ============================================================
   function setupPhotoInput() {
     var input = document.getElementById('photoInput');
     var area = document.getElementById('photoArea');
@@ -2346,20 +2148,17 @@
       compressImage(file).then(function (compressed) {
         addPhotoToCurrent(compressed);
         showToast('📷 Foto ' + currentPhotos.length + ' agregada', 1400);
-      }).catch(function () {
-        showToast('No se pudo procesar la foto');
-      }).finally(function () { input.value = ''; });
+      }).catch(function () { showToast('No se pudo procesar la foto'); })
+        .finally(function () { input.value = ''; });
     });
   }
 
   function setupSignatureEvents() {
-    // We attach these once; canvas itself is re-setup per open
     var canvas = document.getElementById('signatureCanvas');
     canvas.addEventListener('pointerdown', onSigStart);
     canvas.addEventListener('pointermove', onSigMove);
     canvas.addEventListener('pointerup', onSigEnd);
     canvas.addEventListener('pointercancel', onSigEnd);
-
     document.getElementById('sigClearBtn').addEventListener('click', function () {
       clearSignature();
       showToast('Firma borrada', 1400);
@@ -2394,27 +2193,11 @@
     }
 
     document.getElementById('backBtn').addEventListener('click', closeDetail);
-    document.getElementById('btnEntregado').addEventListener('click', function () {
-      // Stash delivery context for async finalize
-      finalizeEvent._status = 'delivered';
-      finalizeEvent._recipient = document.getElementById('recipientInput').value.trim();
-      finalizeEvent._note = document.getElementById('noteInput').value.trim();
-      finalizeEvent._isPickup = currentPackage && currentPackage.type === 'pickup';
-      saveDelivery('delivered');
-    });
-    document.getElementById('btnNovedad').addEventListener('click', function () {
-      finalizeEvent._status = 'issue';
-      finalizeEvent._recipient = document.getElementById('recipientInput').value.trim();
-      finalizeEvent._note = document.getElementById('noteInput').value.trim();
-      finalizeEvent._isPickup = currentPackage && currentPackage.type === 'pickup';
-      saveDelivery('issue');
-    });
+    document.getElementById('btnEntregado').addEventListener('click', function () { saveDelivery('delivered'); });
+    document.getElementById('btnNovedad').addEventListener('click', function () { saveDelivery('issue'); });
 
     document.getElementById('noPhotoBtn').addEventListener('click', function () {
-      if (currentPhotos.length) {
-        currentPhotos = [];
-        currentPhotoIndex = 0;
-      }
+      if (currentPhotos.length) { currentPhotos = []; currentPhotoIndex = 0; }
       currentNoPhoto = !currentNoPhoto;
       updateEvidenceFormUI();
     });
@@ -2444,7 +2227,6 @@
       showToast(state.settings.requireSignature ? 'Firma obligatoria activada' : 'Firma obligatoria desactivada', 1800);
     });
 
-    // Color picker
     var chips = document.querySelectorAll('.color-chip');
     for (var c = 0; c < chips.length; c++) {
       (function (chip) {
@@ -2452,7 +2234,6 @@
           state.settings.signatureColor = chip.getAttribute('data-color');
           saveMessengerData();
           updateColorChips();
-          // Live update current stroke color if canvas is active
           if (signatureCtx) signatureCtx.strokeStyle = getSignatureColorHex();
           showToast('Color de firma cambiado', 1500);
         });
@@ -2561,7 +2342,6 @@
       renderSplash();
       setupPhotoInput();
       setupEventListeners();
-
       var savedCode = localStorage.getItem(CURRENT_KEY);
       if (savedCode && MESSENGERS[savedCode]) {
         loadMessengerData(savedCode);
